@@ -15,6 +15,9 @@ class VulkanXmlWrapper(input:Document) {
   input.getElementsByTagName("comment")
     .foreach(e => e.getParentNode().removeChild(e));
 
+  val basetypes = Map("VkDeviceSize" -> "std::size_t",
+    "VkBool32" -> "bool")
+
   val registry = input.getDocumentElement
 
   val prefixes = registry.getChildsWithTagName("vendorids")
@@ -139,7 +142,7 @@ class VulkanXmlWrapper(input:Document) {
   handles.values.foreach(_.update1())
   commands.values.foreach(_.update1())
 
-  //commands.map(c => c._2.improvedName.takeWhile(d => d.isLower)).toSet.foreach((c:String) => println(c))
+  commands.map(c => c._2.improvedName.takeWhile(d => d.isLower)).toSet.foreach((c:String) => println(c))
 
   class Prefix(val name:String){
 
@@ -175,9 +178,19 @@ class VulkanXmlWrapper(input:Document) {
   }
 
   class Command(val name:String,val returnType:String,val pureReturnType:String,val parameters: Array[Param],val queues:Array[String],val pipeline:String,val cmdbufferlevel:String,val renderpass:String,val successcodes:Array[String],val errorcodes:Array[String]){
+    parameters.foreach(_.command = this);
+
+    var improvedParameters = parameters;
+
     val improvedName = firstLower(name.stripPrefix("vk"))
     val graphicCommand = improvedName.startsWith("cmd")
     var commandConfigurations: Array[CommandConfiguration] = Array()
+    var opperation = improvedName.takeWhile(_.isLower)
+
+    var improvedReturnType = "";
+    if(opperation == "set" || opperation == "enumerate"){
+      improvedReturnType = parameters.last.pureType;
+    }
 
     def update1(): Unit ={
       val improvedHandles = parameters
@@ -194,11 +207,43 @@ class VulkanXmlWrapper(input:Document) {
   }
 
   class CommandConfiguration(val command: Command, val masterHandle: Handle, val parrentHandleProperties: Array[Param]){
-    val parameters = command.parameters.filterNot(parrentHandleProperties.contains(_))
+    val parameters = command.improvedParameters.filterNot(parrentHandleProperties.contains(_))
   }
 
-  class Param(val name:String,val valueType:String,val pureType:String,val len:Array[String],val optional:Array[String],val externsync:String,val noautovalidity:String){
+  class Param(val name:String,val valueType:String,val pureType:String,val len:Array[String],val optional:Array[String],val externsync:String,val noautovalidity:String) {
+    var improvedType = "";
+    var improvedPureType = "";
+    if (handles.contains(pureType)) {
+      improvedType = valueType.replace(pureType, handles(pureType).improvedName)
+      improvedPureType = handles(pureType).improvedName
+      //println(pureType,improvedType)
+    }else if (basetypes.contains(pureType)) {
+      improvedType = valueType.replace(pureType, basetypes(pureType))
+      improvedPureType = basetypes(pureType)
+      //println(pureType,improvedType)
+    }else{
+      improvedType = valueType
+      improvedPureType = pureType
+    }
+    val improvedName = firstLower(name.stripPrefix("p*[A-Z]".r.findPrefixOf(name).getOrElse("").dropRight(1)))
 
+    var command:Command = null;
+
+    def update1(): Unit ={
+      if(len.nonEmpty){
+        improvedType = improvedPureType
+      }
+
+      for(leni <- len){
+        if(leni == "null-terminated"){
+          improvedType = "std::string"
+        }else{
+          //TODO: Parameter Reduction
+          command.improvedParameters = command.improvedParameters.filterNot(_.name == leni)
+          improvedType = s"std::vector<$improvedType>"
+        }
+      }
+    }
   }
 
   class BitMask(val name:String){
@@ -267,34 +312,44 @@ class VulkanXmlWrapper(input:Document) {
 
 
   def generateCpp17():String = {
+    def writeHandle(handle: Handle): String = {
+      def writeParrentVar(handle: Handle):String = {
+        s"${handle.improvedName} ${handle.varName};"
+      }
+
+      def writeParrentParam(handle: Handle):String = {
+        s"${handle.improvedName} ${handle.varName}_"
+      }
+
+      def writeParrentInit(handle: Handle):String ={
+        s"${handle.varName}(${handle.varName}_)"
+      }
+
+      def writeCommandConfiguration(commandConfiguration: CommandConfiguration): String ={
+        def writeParameter(param: Param): String ={
+          s"${param.improvedType} ${param.improvedName}"
+        }
+
+        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.map(writeParameter(_)).mkString(",")}){\n" +
+          s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(_.improvedName).mkString(",")});\n" +
+          s"}\n"
+      }
+
+      s"class ${handle.improvedName}{\n" +
+        s"  public:\n" +
+        s"    ${handle.improvedName}(${handle.name} ${handle.varName}_,${handle.improvedParents.map(writeParrentParam(_)).mkString(",")})\n" +
+        s"      : ${handle.varName}(${handle.varName}_),\n" +
+        s"        ${indentation(handle.improvedParents.map(writeParrentInit(_)).mkString(",\n"),"        ")}{\n" +
+        s"    }\n" +
+        s"    \n" +
+        s"    ${indentation(handle.commandConfigurations.map(writeCommandConfiguration(_)).mkString("\n\n"),"    ")}" +
+        s"  private:\n" +
+        s"    ${handle.name} ${handle.varName};\n" +
+        s"    ${indentation(handle.improvedParents.map(writeParrentVar(_)).mkString("\n"),"    ")}\n" +
+        s"}"
+    }
+
     "namespace vk{\n" +
       s"  ${indentation(handles.values.map(writeHandle(_)).mkString("\n\n"),"  ")}"
   }
-
-  def writeHandle(handle: Handle): String = {
-    def writeParrentVar(handle: Handle):String = {
-      s"${handle.improvedName} ${handle.varName};"
-    }
-
-    def writeParrentParam(handle: Handle):String = {
-      s"${handle.improvedName} ${handle.varName}_"
-    }
-
-    def writeParrentInit(handle: Handle):String ={
-      s"${handle.varName}(${handle.varName}_)"
-    }
-
-    s"class ${handle.improvedName}{\n" +
-      s"  public:\n" +
-      s"    ${handle.improvedName}(${handle.name} ${handle.varName}_,${handle.improvedParents.map(writeParrentParam(_)).mkString(",")})\n" +
-      s"      : ${handle.varName}(${handle.varName}_),\n" +
-      s"        ${indentation(handle.improvedParents.map(writeParrentInit(_)).mkString(",\n"),"        ")}{\n" +
-      s"    }\n" +
-      s"  private:\n" +
-      s"    ${handle.name} ${handle.varName};\n" +
-      s"    ${indentation(handle.improvedParents.map(writeParrentVar(_)).mkString("\n"),"    ")}\n" +
-      s"}"
-  }
-
-
 }
