@@ -193,6 +193,8 @@ class VulkanXmlWrapper(input:Document) {
     }
 
     def update1(): Unit ={
+      parameters.foreach(_.update1())
+
       val improvedHandles = parameters
         .filter(p => handles.contains(p.valueType))
         .map(p => (p,handles(p.valueType)))
@@ -207,12 +209,13 @@ class VulkanXmlWrapper(input:Document) {
   }
 
   class CommandConfiguration(val command: Command, val masterHandle: Handle, val parrentHandleProperties: Array[Param]){
-    val parameters = command.improvedParameters.filterNot(parrentHandleProperties.contains(_))
+    val parameters = command.improvedParameters
   }
 
   class Param(val name:String,val valueType:String,val pureType:String,val len:Array[String],val optional:Array[String],val externsync:String,val noautovalidity:String) {
     var improvedType = "";
     var improvedPureType = "";
+    var lenParams:mutable.ListBuffer[Param] = mutable.ListBuffer()
     if (handles.contains(pureType)) {
       improvedType = valueType.replace(pureType, handles(pureType).improvedName)
       improvedPureType = handles(pureType).improvedName
@@ -234,12 +237,12 @@ class VulkanXmlWrapper(input:Document) {
         improvedType = improvedPureType
       }
 
-      for(leni <- len){
+      for(leni <- len.reverse){
         if(leni == "null-terminated"){
           improvedType = "std::string"
         }else{
-          //TODO: Parameter Reduction
-          command.improvedParameters = command.improvedParameters.filterNot(_.name == leni)
+          //TODO: Parameter Reduction+
+          lenParams ++= command.improvedParameters.filter(_.name == leni)
           improvedType = s"std::vector<$improvedType>"
         }
       }
@@ -332,7 +335,7 @@ class VulkanXmlWrapper(input:Document) {
 
         s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.map(writeParameter(_)).mkString(",")}){\n" +
           s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(_.improvedName).mkString(",")});\n" +
-          s"}\n"
+          s"}"
       }
 
       s"class ${handle.improvedName}{\n" +
@@ -342,7 +345,7 @@ class VulkanXmlWrapper(input:Document) {
         s"        ${indentation(handle.improvedParents.map(writeParrentInit(_)).mkString(",\n"),"        ")}{\n" +
         s"    }\n" +
         s"    \n" +
-        s"    ${indentation(handle.commandConfigurations.map(writeCommandConfiguration(_)).mkString("\n\n"),"    ")}" +
+        s"    ${indentation(handle.commandConfigurations.map(writeCommandConfiguration(_)).mkString("\n\n"),"    ")}\n" +
         s"  private:\n" +
         s"    ${handle.name} ${handle.varName};\n" +
         s"    ${indentation(handle.improvedParents.map(writeParrentVar(_)).mkString("\n"),"    ")}\n" +
