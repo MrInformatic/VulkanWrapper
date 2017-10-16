@@ -162,19 +162,19 @@ class VulkanXmlWrapper(input:Document) {
       childs = improvedChilds.map(_.name)
     }
 
-    def isParrent(handle: Handle): Option[Array[Handle]] =
-      if(parents.contains(handle.name))
-        return Option(Array(this))
+    def isParrent(handle: Handle): Array[Handle] =
+      if(handle == this)
+        return Array(this)
       else
-        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).getOrElse(Option.empty).map(a => a ++ Array(this))
+        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).map(a => a ++ Array(this)).getOrElse(Array.empty)
 
-    def isChild(handle: Handle): Option[Array[Handle]] =
-      if(childs.contains(handle.name))
-        return Option(Array(this))
+    def isChild(handle: Handle): Array[Handle] =
+      if(handle == this)
+        return Array(this)
       else
-        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).getOrElse(Option.empty)
+        improvedChilds.map(_.isChild(handle)).find(_.nonEmpty).map(a => a ++ Array(this)).getOrElse(Array.empty)
 
-    def isRelated(handle: Handle): Boolean = isParrent(handle) || isChild(handle) || handle==this
+    def isRelated(handle: Handle): Array[Handle] = Option(isParrent(handle)).filter(_.nonEmpty).getOrElse(Option(isChild(handle)).filter(_.nonEmpty).getOrElse(if(handle==this) Array(this) else Array()))
   }
 
   class Command(val name:String,val returnType:String,val pureReturnType:String,val parameters: Array[Param],val queues:Array[String],val pipeline:String,val cmdbufferlevel:String,val renderpass:String,val successcodes:Array[String],val errorcodes:Array[String]){
@@ -197,10 +197,10 @@ class VulkanXmlWrapper(input:Document) {
         .filter(p => handles.contains(p.valueType))
         .map(p => (p,handles(p.valueType)))
 
-      val highest = improvedHandles.filterNot(h => improvedHandles.exists(_._2.isParrent(h._2)))
+      val highest = improvedHandles.filterNot(h => improvedHandles.exists(_._2.isParrent(h._2).nonEmpty))
 
       commandConfigurations = highest
-        .map(h => new CommandConfiguration(this,h._2,improvedHandles.filter(_._2.isChild(h._2)).map(_._1) ++ Array(h._1)))
+        .map(h => new CommandConfiguration(this,h._2,improvedHandles.filter(_._2.isChild(h._2).nonEmpty).map(_._1) ++ Array(h._1)))
 
       commandConfigurations.foreach(c => c.masterHandle.commandConfigurations += c)
     }
@@ -246,13 +246,11 @@ class VulkanXmlWrapper(input:Document) {
           improvedType = s"std::vector<$improvedType>"
         }
       }
-
       lenParams.foreach(_.writeParam = false)
-
     }
   }
 
-  class ParamConfiguration(val param: Param,val commandConfiguration: CommandConfiguration){
+  class ParamConfiguration(val param: Param,val isHandle:Boolean,val handlePath){
 
   }
 
