@@ -162,25 +162,23 @@ class VulkanXmlWrapper(input:Document) {
       childs = improvedChilds.map(_.name)
     }
 
-    def isParrent(handle: Handle): Boolean =
+    def isParrent(handle: Handle): Option[Array[Handle]] =
       if(parents.contains(handle.name))
-        true
+        return Option(Array(this))
       else
-        improvedParents.exists(_.isParrent(handle))
+        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).getOrElse(Option.empty).map(a => a ++ Array(this))
 
-    def isChild(handle: Handle): Boolean =
+    def isChild(handle: Handle): Option[Array[Handle]] =
       if(childs.contains(handle.name))
-        true
+        return Option(Array(this))
       else
-        improvedChilds.exists(_.isChild(handle))
+        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).getOrElse(Option.empty)
 
     def isRelated(handle: Handle): Boolean = isParrent(handle) || isChild(handle) || handle==this
   }
 
   class Command(val name:String,val returnType:String,val pureReturnType:String,val parameters: Array[Param],val queues:Array[String],val pipeline:String,val cmdbufferlevel:String,val renderpass:String,val successcodes:Array[String],val errorcodes:Array[String]){
     parameters.foreach(_.command = this);
-
-    var improvedParameters = parameters;
 
     val improvedName = firstLower(name.stripPrefix("vk"))
     val graphicCommand = improvedName.startsWith("cmd")
@@ -209,7 +207,7 @@ class VulkanXmlWrapper(input:Document) {
   }
 
   class CommandConfiguration(val command: Command, val masterHandle: Handle, val parrentHandleProperties: Array[Param]){
-    val parameters = command.improvedParameters
+    val parameters = command.parameters.filterNot(parrentHandleProperties.contains(_))
   }
 
   class Param(val name:String,val valueType:String,val pureType:String,val len:Array[String],val optional:Array[String],val externsync:String,val noautovalidity:String) {
@@ -232,6 +230,8 @@ class VulkanXmlWrapper(input:Document) {
 
     var command:Command = null;
 
+    var writeParam:Boolean = true;
+
     def update1(): Unit ={
       if(len.nonEmpty){
         improvedType = improvedPureType
@@ -242,11 +242,18 @@ class VulkanXmlWrapper(input:Document) {
           improvedType = "std::string"
         }else{
           //TODO: Parameter Reduction+
-          lenParams ++= command.improvedParameters.filter(_.name == leni)
+          lenParams ++= command.parameters.filter(_.name == leni)
           improvedType = s"std::vector<$improvedType>"
         }
       }
+
+      lenParams.foreach(_.writeParam = false)
+
     }
+  }
+
+  class ParamConfiguration(val param: Param,val commandConfiguration: CommandConfiguration){
+
   }
 
   class BitMask(val name:String){
@@ -333,7 +340,7 @@ class VulkanXmlWrapper(input:Document) {
           s"${param.improvedType} ${param.improvedName}"
         }
 
-        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.map(writeParameter(_)).mkString(",")}){\n" +
+        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filter(_.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
           s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(_.improvedName).mkString(",")});\n" +
           s"}"
       }
