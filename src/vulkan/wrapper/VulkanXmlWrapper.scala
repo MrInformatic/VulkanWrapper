@@ -166,13 +166,13 @@ class VulkanXmlWrapper(input:Document) {
       if(handle == this)
         return Array(this)
       else
-        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).map(a => a ++ Array(this)).getOrElse(Array.empty)
+        improvedParents.map(_.isParrent(handle)).find(_.nonEmpty).map(a => Array(this) ++ a).getOrElse(Array.empty)
 
     def isChild(handle: Handle): Array[Handle] =
       if(handle == this)
         return Array(this)
       else
-        improvedChilds.map(_.isChild(handle)).find(_.nonEmpty).map(a => a ++ Array(this)).getOrElse(Array.empty)
+        improvedChilds.map(_.isChild(handle)).find(_.nonEmpty).map(a => Array(this) ++ a).getOrElse(Array.empty)
 
     def isRelated(handle: Handle): Array[Handle] = Option(isParrent(handle)).filter(_.nonEmpty).getOrElse(Option(isChild(handle)).filter(_.nonEmpty).getOrElse(if(handle==this) Array(this) else Array()))
   }
@@ -197,7 +197,7 @@ class VulkanXmlWrapper(input:Document) {
         .filter(p => handles.contains(p.valueType))
         .map(p => (p,handles(p.valueType)))
 
-      val highest = improvedHandles.filterNot(h => improvedHandles.exists(_._2.isParrent(h._2).nonEmpty))
+      val highest = improvedHandles.filterNot(h => improvedHandles.filter(_!=h).exists(_._2.isParrent(h._2).nonEmpty))
 
       commandConfigurations = highest
         .map(h => new CommandConfiguration(this,h._2,improvedHandles.filter(_._2.isChild(h._2).nonEmpty).map(_._1) ++ Array(h._1)))
@@ -207,7 +207,9 @@ class VulkanXmlWrapper(input:Document) {
   }
 
   class CommandConfiguration(val command: Command, val masterHandle: Handle, val parrentHandleProperties: Array[Param]){
-    val parameters = command.parameters.filterNot(parrentHandleProperties.contains(_))
+    val parameters = command.parameters
+      .map(p => (p,parrentHandleProperties.contains(p)))
+      .map(p => new ParamConfiguration(p._1,p._2,if(p._2) masterHandle.isParrent(handles(p._1.valueType)) else Array.empty))
   }
 
   class Param(val name:String,val valueType:String,val pureType:String,val len:Array[String],val optional:Array[String],val externsync:String,val noautovalidity:String) {
@@ -228,9 +230,11 @@ class VulkanXmlWrapper(input:Document) {
     }
     val improvedName = firstLower(name.stripPrefix("p*[A-Z]".r.findPrefixOf(name).getOrElse("").dropRight(1)))
 
-    var command:Command = null;
+    var command:Command = null
 
-    var writeParam:Boolean = true;
+    var writeParam:Boolean = true
+
+
 
     def update1(): Unit ={
       if(len.nonEmpty){
@@ -250,7 +254,7 @@ class VulkanXmlWrapper(input:Document) {
     }
   }
 
-  class ParamConfiguration(val param: Param,val isHandle:Boolean,val handlePath){
+  class ParamConfiguration(val param: Param,val isHandle:Boolean,val handlePath:Array[Handle]){
 
   }
 
@@ -333,13 +337,23 @@ class VulkanXmlWrapper(input:Document) {
         s"${handle.varName}(${handle.varName}_)"
       }
 
-      def writeCommandConfiguration(commandConfiguration: CommandConfiguration): String ={
-        def writeParameter(param: Param): String ={
-          s"${param.improvedType} ${param.improvedName}"
+      def writeCommand(commandConfiguration: CommandConfiguration): String ={
+        def writeParameter(paramConfiguration: ParamConfiguration): String ={
+          s"${paramConfiguration.param.improvedType} ${paramConfiguration.param.improvedName}"
         }
 
-        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filter(_.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
-          s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(_.improvedName).mkString(",")});\n" +
+        def writeProcess(paramConfiguration: ParamConfiguration):String ={
+          if(paramConfiguration.isHandle)
+            if(paramConfiguration.handlePath.length==1)
+              s"${paramConfiguration.handlePath(0).varName}"
+            else
+              s"(${paramConfiguration.handlePath.last.name})${paramConfiguration.handlePath.drop(1).map(_.varName).mkString(".")}"
+          else
+            s"${paramConfiguration.param.improvedName}"
+        }
+
+        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
+          s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(writeProcess(_)).mkString(",")});\n" +
           s"}"
       }
 
@@ -350,7 +364,7 @@ class VulkanXmlWrapper(input:Document) {
         s"        ${indentation(handle.improvedParents.map(writeParrentInit(_)).mkString(",\n"),"        ")}{\n" +
         s"    }\n" +
         s"    \n" +
-        s"    ${indentation(handle.commandConfigurations.map(writeCommandConfiguration(_)).mkString("\n\n"),"    ")}\n" +
+        s"    ${indentation(handle.commandConfigurations.map(writeCommand(_)).mkString("\n\n"),"    ")}\n" +
         s"  private:\n" +
         s"    ${handle.name} ${handle.varName};\n" +
         s"    ${indentation(handle.improvedParents.map(writeParrentVar(_)).mkString("\n"),"    ")}\n" +
