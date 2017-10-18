@@ -371,14 +371,18 @@ class VulkanXmlWrapper(input:Document) {
         }
 
         def writeCommandReturn(paramConfiguration: Array[ParamConfiguration],i:Int):String ={
-          s"${paramConfiguration(i).param.improvedType} ${paramConfiguration(i).param.improvedName}${if(paramConfiguration(i).param.lenParams.nonEmpty) paramConfiguration(i).param.lenParams.map(_.improvedName).mkString("(",",",")") else ""};\n" +
-            s"${commandConfiguration.command.name}(${commandConfiguration.parameters.map(p => if(!p.param.returnParam) writeProcess(p) else if(paramConfiguration.take(i+1).contains(p)) {if(p.param.lenParams.nonEmpty) p.param.improvedName+".data()" else p.param.improvedName} else "null").mkString(",")});"
+          if(paramConfiguration.nonEmpty)
+            s"${paramConfiguration(i).param.improvedType} ${paramConfiguration(i).param.improvedName}${if(paramConfiguration(i).param.lenParams.nonEmpty) paramConfiguration(i).param.lenParams.map(_.improvedName).mkString("(",",",")") else ""};\n" +
+              s"${commandConfiguration.command.name}(${commandConfiguration.parameters.map(p => if(!p.param.returnParam) writeProcess(p) else if(paramConfiguration.take(i+1).contains(p)) {if(p.param.lenParams.nonEmpty) p.param.improvedName+".data()" else p.param.improvedName} else "null").mkString(",")});"
+          else
+            s"${commandConfiguration.command.name}(${commandConfiguration.parameters.map(writeProcess(_)).mkString(",")});"
         }
 
         val returns = commandConfiguration.parameters.filter(_.param.returnParam);
 
         s"${commandConfiguration.command.improvedReturnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
-          s"  ${indentation((0 until returns.length).map(writeCommandReturn(returns,_)).mkString("\n\n"),"  ")}\n" +
+          s"  ${if(returns.isEmpty) if(commandConfiguration.command.improvedReturnType=="void") writeCommandReturn(Array(),0) else "return "+writeCommandReturn(Array(),0) else indentation((0 until returns.length).map(writeCommandReturn(returns,_)).mkString("\n\n"),"  ")}\n" +
+          s"${commandConfiguration.parameters.reverse.find(_.param.returnParam).map(p => "  \n  return "+p.param.improvedName+";\n").getOrElse("")}" +
           s"}"
       }
 
