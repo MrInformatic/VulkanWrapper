@@ -185,13 +185,12 @@ class VulkanXmlWrapper(input:Document) {
     var commandConfigurations: Array[CommandConfiguration] = Array()
     var opperation = improvedName.takeWhile(_.isLower)
 
-    var improvedReturnType = "";
-    if(opperation == "set" || opperation == "enumerate"){
-      improvedReturnType = parameters.last.pureType;
-    }
+    var improvedReturnType = returnType;
 
     def update1(): Unit ={
       parameters.foreach(_.update1())
+
+      parameters.reverse.find(_.orginReturnParam).foreach(p => improvedReturnType = p.improvedType)
 
       val improvedHandles = parameters
         .filter(p => handles.contains(p.valueType))
@@ -234,7 +233,12 @@ class VulkanXmlWrapper(input:Document) {
 
     var writeParam:Boolean = true
 
+    var lenParam:Param = null;
 
+    var returnParam = !valueType.startsWith("const") && !valueType.startsWith("struct") && valueType.endsWith("*")
+    var orginReturnParam = returnParam;
+    if(returnParam)
+      writeParam = false
 
     def update1(): Unit ={
       if(len.nonEmpty){
@@ -251,6 +255,10 @@ class VulkanXmlWrapper(input:Document) {
         }
       }
       lenParams.foreach(_.writeParam = false)
+      lenParams.foreach(_.lenParam = this)
+
+      if(returnParam)
+        lenParams.foreach(_.returnParam = true)
     }
   }
 
@@ -349,11 +357,28 @@ class VulkanXmlWrapper(input:Document) {
             else
               s"(${paramConfiguration.handlePath.last.name})${paramConfiguration.handlePath.drop(1).map(_.varName).mkString(".")}"
           else
-            s"${paramConfiguration.param.improvedName}"
+            if(paramConfiguration.param.lenParams.nonEmpty)
+              s"${paramConfiguration.param.improvedName}.data()"
+            else
+              if(paramConfiguration.param.lenParam!=null)
+                s"${paramConfiguration.param.lenParam.improvedName}.size()"
+              else
+                s"${paramConfiguration.param.improvedName}"
         }
 
-        s"${commandConfiguration.command.returnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
-          s"  ${commandConfiguration.command.name}(${commandConfiguration.parameters.map(writeProcess(_)).mkString(",")});\n" +
+        def writeReturnParam(paramConfiguration: ParamConfiguration):String ={
+          s"${paramConfiguration.param.valueType} ${paramConfiguration.param.name};"
+        }
+
+        def writeCommandReturn(paramConfiguration: Array[ParamConfiguration],i:Int):String ={
+          s"${paramConfiguration(i).param.improvedType} ${paramConfiguration(i).param.improvedName}${if(paramConfiguration(i).param.lenParams.nonEmpty) paramConfiguration(i).param.lenParams.map(_.improvedName).mkString("(",",",")") else ""};\n" +
+            s"${commandConfiguration.command.name}(${commandConfiguration.parameters.map(p => if(!p.param.returnParam) writeProcess(p) else if(paramConfiguration.take(i+1).contains(p)) {if(p.param.lenParams.nonEmpty) p.param.improvedName+".data()" else p.param.improvedName} else "null").mkString(",")});"
+        }
+
+        val returns = commandConfiguration.parameters.filter(_.param.returnParam);
+
+        s"${commandConfiguration.command.improvedReturnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
+          s"  ${indentation((0 until returns.length).map(writeCommandReturn(returns,_)).mkString("\n\n"),"  ")}\n" +
           s"}"
       }
 

@@ -7,15 +7,15 @@ namespace vk{
       }
       
       VkResult freeDescriptorSets(std::vector<DescriptorSet> descriptorSets){
-        vkFreeDescriptorSets((VkDevice)device,descriptorPool,descriptorSetCount,descriptorSets);
+        
       }
       
       VkResult resetDescriptorPool(VkDescriptorPoolResetFlags flags){
-        vkResetDescriptorPool((VkDevice)device,descriptorPool,flags);
+        
       }
       
       void destroyDescriptorPool(const VkAllocationCallbacks* allocator){
-        vkDestroyDescriptorPool((VkDevice)device,descriptorPool,allocator);
+        
       }
     private:
       VkDescriptorPool descriptorPool;
@@ -29,12 +29,13 @@ namespace vk{
           device(device_){
       }
       
-      VkResult acquireNextImageKHR(SwapchainKHR swapchain,uint64_t timeout,Fence fence,uint32_t* imageIndex){
+      uint32_t* acquireNextImageKHR(SwapchainKHR swapchain,uint64_t timeout,Fence fence){
+        uint32_t* imageIndex;
         vkAcquireNextImageKHR((VkDevice)device,swapchain,timeout,semaphore,fence,imageIndex);
       }
       
       void destroySemaphore(const VkAllocationCallbacks* allocator){
-        vkDestroySemaphore((VkDevice)device,semaphore,allocator);
+        
       }
     private:
       VkSemaphore semaphore;
@@ -48,16 +49,20 @@ namespace vk{
           device(device_){
       }
       
-      VkResult getValidationCacheDataEXT(std::vector<void> data){
-        vkGetValidationCacheDataEXT((VkDevice)device,validationCacheEXT,dataSize,data);
+      std::vector<void> getValidationCacheDataEXT(){
+        size_t* dataSize;
+        vkGetValidationCacheDataEXT((VkDevice)device,validationCacheEXT,dataSize,null);
+        
+        std::vector<void> data(dataSize);
+        vkGetValidationCacheDataEXT((VkDevice)device,validationCacheEXT,dataSize,data.data());
       }
       
       VkResult mergeValidationCachesEXT(std::vector<ValidationCacheEXT> srcCaches){
-        vkMergeValidationCachesEXT((VkDevice)device,validationCacheEXT,srcCacheCount,srcCaches);
+        
       }
       
       void destroyValidationCacheEXT(const VkAllocationCallbacks* allocator){
-        vkDestroyValidationCacheEXT((VkDevice)device,validationCacheEXT,allocator);
+        
       }
     private:
       VkValidationCacheEXT validationCacheEXT;
@@ -72,10 +77,11 @@ namespace vk{
       }
       
       void destroyRenderPass(const VkAllocationCallbacks* allocator){
-        vkDestroyRenderPass((VkDevice)device,renderPass,allocator);
+        
       }
       
-      void getRenderAreaGranularity(VkExtent2D* granularity){
+      VkExtent2D* getRenderAreaGranularity(){
+        VkExtent2D* granularity;
         vkGetRenderAreaGranularity((VkDevice)device,renderPass,granularity);
       }
     private:
@@ -91,7 +97,8 @@ namespace vk{
           displayKHR(displayKHR_){
       }
       
-      VkResult getDisplayPlaneCapabilitiesKHR(uint32_t planeIndex,VkDisplayPlaneCapabilitiesKHR* capabilities){
+      VkDisplayPlaneCapabilitiesKHR* getDisplayPlaneCapabilitiesKHR(uint32_t planeIndex){
+        VkDisplayPlaneCapabilitiesKHR* capabilities;
         vkGetDisplayPlaneCapabilitiesKHR((VkPhysicalDevice)physicalDevice,displayModeKHR,planeIndex,capabilities);
       }
     private:
@@ -108,7 +115,7 @@ namespace vk{
       }
       
       void destroySampler(const VkAllocationCallbacks* allocator){
-        vkDestroySampler((VkDevice)device,sampler,allocator);
+        
       }
     private:
       VkSampler sampler;
@@ -123,19 +130,19 @@ namespace vk{
       }
       
       VkResult queueWaitIdle(){
-        vkQueueWaitIdle(queue);
+        
       }
       
       VkResult queueSubmit(std::vector<VkSubmitInfo> submits,Fence fence){
-        vkQueueSubmit(queue,submitCount,submits,fence);
+        
       }
       
       VkResult queueBindSparse(std::vector<VkBindSparseInfo> bindInfo,Fence fence){
-        vkQueueBindSparse(queue,bindInfoCount,bindInfo,fence);
+        
       }
       
       VkResult queuePresentKHR(const VkPresentInfoKHR* presentInfo){
-        vkQueuePresentKHR(queue,presentInfo);
+        
       }
     private:
       VkQueue queue;
@@ -150,7 +157,7 @@ namespace vk{
       }
       
       void destroySamplerYcbcrConversionKHR(const VkAllocationCallbacks* allocator){
-        vkDestroySamplerYcbcrConversionKHR((VkDevice)device,samplerYcbcrConversionKHR,allocator);
+        
       }
     private:
       VkSamplerYcbcrConversionKHR samplerYcbcrConversionKHR;
@@ -165,19 +172,19 @@ namespace vk{
       }
       
       void trimCommandPoolKHR(VkCommandPoolTrimFlagsKHR flags){
-        vkTrimCommandPoolKHR((VkDevice)device,commandPool,flags);
+        
       }
       
       VkResult resetCommandPool(VkCommandPoolResetFlags flags){
-        vkResetCommandPool((VkDevice)device,commandPool,flags);
+        
       }
       
       void destroyCommandPool(const VkAllocationCallbacks* allocator){
-        vkDestroyCommandPool((VkDevice)device,commandPool,allocator);
+        
       }
       
       void freeCommandBuffers(std::vector<CommandBuffer> commandBuffers){
-        vkFreeCommandBuffers((VkDevice)device,commandPool,commandBufferCount,commandBuffers);
+        
       }
     private:
       VkCommandPool commandPool;
@@ -192,7 +199,7 @@ namespace vk{
       }
       
       void updateDescriptorSetWithTemplateKHR(DescriptorUpdateTemplateKHR descriptorUpdateTemplate,const void* data){
-        vkUpdateDescriptorSetWithTemplateKHR((VkDevice)descriptorPool.device,descriptorSet,descriptorUpdateTemplate,data);
+        
       }
     private:
       VkDescriptorSet descriptorSet;
@@ -207,7 +214,7 @@ namespace vk{
       }
       
       void destroyDescriptorSetLayout(const VkAllocationCallbacks* allocator){
-        vkDestroyDescriptorSetLayout((VkDevice)device,descriptorSetLayout,allocator);
+        
       }
     private:
       VkDescriptorSetLayout descriptorSetLayout;
@@ -221,35 +228,51 @@ namespace vk{
           instance(instance_){
       }
       
-      VkResult getPhysicalDevicePresentRectanglesKHX(PhysicalDevice physicalDevice,std::vector<VkRect2D> rects){
-        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surfaceKHR,rectCount,rects);
+      std::vector<VkRect2D> getPhysicalDevicePresentRectanglesKHX(PhysicalDevice physicalDevice){
+        uint32_t* rectCount;
+        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surfaceKHR,rectCount,null);
+        
+        std::vector<VkRect2D> rects(rectCount);
+        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surfaceKHR,rectCount,rects.data());
       }
       
       void destroySurfaceKHR(const VkAllocationCallbacks* allocator){
-        vkDestroySurfaceKHR((VkInstance)instance,surfaceKHR,allocator);
+        
       }
       
-      VkResult getPhysicalDeviceSurfacePresentModesKHR(PhysicalDevice physicalDevice,std::vector<VkPresentModeKHR> presentModes){
-        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surfaceKHR,presentModeCount,presentModes);
+      std::vector<VkPresentModeKHR> getPhysicalDeviceSurfacePresentModesKHR(PhysicalDevice physicalDevice){
+        uint32_t* presentModeCount;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surfaceKHR,presentModeCount,null);
+        
+        std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surfaceKHR,presentModeCount,presentModes.data());
       }
       
-      VkResult getDeviceGroupSurfacePresentModesKHX(Device device,VkDeviceGroupPresentModeFlagsKHX* modes){
+      VkDeviceGroupPresentModeFlagsKHX* getDeviceGroupSurfacePresentModesKHX(Device device){
+        VkDeviceGroupPresentModeFlagsKHX* modes;
         vkGetDeviceGroupSurfacePresentModesKHX(device,surfaceKHR,modes);
       }
       
-      VkResult getPhysicalDeviceSurfaceCapabilities2EXT(PhysicalDevice physicalDevice,VkSurfaceCapabilities2EXT* surfaceCapabilities){
+      VkSurfaceCapabilities2EXT* getPhysicalDeviceSurfaceCapabilities2EXT(PhysicalDevice physicalDevice){
+        VkSurfaceCapabilities2EXT* surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice,surfaceKHR,surfaceCapabilities);
       }
       
-      VkResult getPhysicalDeviceSurfaceSupportKHR(PhysicalDevice physicalDevice,uint32_t queueFamilyIndex,bool* supported){
+      bool* getPhysicalDeviceSurfaceSupportKHR(PhysicalDevice physicalDevice,uint32_t queueFamilyIndex){
+        bool* supported;
         vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice,queueFamilyIndex,surfaceKHR,supported);
       }
       
-      VkResult getPhysicalDeviceSurfaceFormatsKHR(PhysicalDevice physicalDevice,std::vector<VkSurfaceFormatKHR> surfaceFormats){
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surfaceKHR,surfaceFormatCount,surfaceFormats);
+      std::vector<VkSurfaceFormatKHR> getPhysicalDeviceSurfaceFormatsKHR(PhysicalDevice physicalDevice){
+        uint32_t* surfaceFormatCount;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surfaceKHR,surfaceFormatCount,null);
+        
+        std::vector<VkSurfaceFormatKHR> surfaceFormats(surfaceFormatCount);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surfaceKHR,surfaceFormatCount,surfaceFormats.data());
       }
       
-      VkResult getPhysicalDeviceSurfaceCapabilitiesKHR(PhysicalDevice physicalDevice,VkSurfaceCapabilitiesKHR* surfaceCapabilities){
+      VkSurfaceCapabilitiesKHR* getPhysicalDeviceSurfaceCapabilitiesKHR(PhysicalDevice physicalDevice){
+        VkSurfaceCapabilitiesKHR* surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice,surfaceKHR,surfaceCapabilities);
       }
     private:
@@ -265,27 +288,27 @@ namespace vk{
       }
       
       void cmdResetEvent(CommandBuffer commandBuffer,VkPipelineStageFlags stageMask){
-        vkCmdResetEvent(commandBuffer,event,stageMask);
+        
       }
       
       void destroyEvent(const VkAllocationCallbacks* allocator){
-        vkDestroyEvent((VkDevice)device,event,allocator);
+        
       }
       
       void cmdSetEvent(CommandBuffer commandBuffer,VkPipelineStageFlags stageMask){
-        vkCmdSetEvent(commandBuffer,event,stageMask);
+        
       }
       
       VkResult resetEvent(){
-        vkResetEvent((VkDevice)device,event);
+        
       }
       
       VkResult setEvent(){
-        vkSetEvent((VkDevice)device,event);
+        
       }
       
       VkResult getEventStatus(){
-        vkGetEventStatus((VkDevice)device,event);
+        
       }
     private:
       VkEvent event;
@@ -300,7 +323,7 @@ namespace vk{
       }
       
       void destroyBufferView(const VkAllocationCallbacks* allocator){
-        vkDestroyBufferView((VkDevice)device,bufferView,allocator);
+        
       }
     private:
       VkBufferView bufferView;
@@ -315,23 +338,23 @@ namespace vk{
       }
       
       void destroyPipelineLayout(const VkAllocationCallbacks* allocator){
-        vkDestroyPipelineLayout((VkDevice)device,pipelineLayout,allocator);
+        
       }
       
       void cmdPushDescriptorSetKHR(CommandBuffer commandBuffer,VkPipelineBindPoint pipelineBindPoint,uint32_t set,std::vector<VkWriteDescriptorSet> descriptorWrites){
-        vkCmdPushDescriptorSetKHR(commandBuffer,pipelineBindPoint,pipelineLayout,set,descriptorWriteCount,descriptorWrites);
+        
       }
       
       void cmdPushDescriptorSetWithTemplateKHR(CommandBuffer commandBuffer,DescriptorUpdateTemplateKHR descriptorUpdateTemplate,uint32_t set,const void* data){
-        vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer,descriptorUpdateTemplate,pipelineLayout,set,data);
+        
       }
       
       void cmdPushConstants(CommandBuffer commandBuffer,VkShaderStageFlags stageFlags,uint32_t offset,std::vector<void> values){
-        vkCmdPushConstants(commandBuffer,pipelineLayout,stageFlags,offset,size,values);
+        
       }
       
       void cmdBindDescriptorSets(CommandBuffer commandBuffer,VkPipelineBindPoint pipelineBindPoint,uint32_t firstSet,std::vector<DescriptorSet> descriptorSets,std::vector<uint32_t> dynamicOffsets){
-        vkCmdBindDescriptorSets(commandBuffer,pipelineBindPoint,pipelineLayout,firstSet,descriptorSetCount,descriptorSets,dynamicOffsetCount,dynamicOffsets);
+        
       }
     private:
       VkPipelineLayout pipelineLayout;
@@ -345,67 +368,86 @@ namespace vk{
           {
       }
       
-      VkResult createXlibSurfaceKHR(const VkXlibSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createXlibSurfaceKHR(const VkXlibSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateXlibSurfaceKHR(instance,createInfo,allocator,surface);
       }
       
-      VkResult createWin32SurfaceKHR(const VkWin32SurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createWin32SurfaceKHR(const VkWin32SurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateWin32SurfaceKHR(instance,createInfo,allocator,surface);
       }
       
       PFN_vkVoidFunction getInstanceProcAddr(std::string name){
-        vkGetInstanceProcAddr(instance,name);
+        
       }
       
-      VkResult createWaylandSurfaceKHR(const VkWaylandSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createWaylandSurfaceKHR(const VkWaylandSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateWaylandSurfaceKHR(instance,createInfo,allocator,surface);
       }
       
-      VkResult createIOSSurfaceMVK(const VkIOSSurfaceCreateInfoMVK* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createIOSSurfaceMVK(const VkIOSSurfaceCreateInfoMVK* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateIOSSurfaceMVK(instance,createInfo,allocator,surface);
       }
       
-      VkResult createAndroidSurfaceKHR(const VkAndroidSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createAndroidSurfaceKHR(const VkAndroidSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateAndroidSurfaceKHR(instance,createInfo,allocator,surface);
       }
       
-      VkResult createDebugReportCallbackEXT(const VkDebugReportCallbackCreateInfoEXT* createInfo,const VkAllocationCallbacks* allocator,DebugReportCallbackEXT* callback){
+      DebugReportCallbackEXT* createDebugReportCallbackEXT(const VkDebugReportCallbackCreateInfoEXT* createInfo,const VkAllocationCallbacks* allocator){
+        DebugReportCallbackEXT* callback;
         vkCreateDebugReportCallbackEXT(instance,createInfo,allocator,callback);
       }
       
-      VkResult createViSurfaceNN(const VkViSurfaceCreateInfoNN* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createViSurfaceNN(const VkViSurfaceCreateInfoNN* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateViSurfaceNN(instance,createInfo,allocator,surface);
       }
       
-      VkResult enumeratePhysicalDevices(std::vector<PhysicalDevice> physicalDevices){
-        vkEnumeratePhysicalDevices(instance,physicalDeviceCount,physicalDevices);
+      std::vector<PhysicalDevice> enumeratePhysicalDevices(){
+        uint32_t* physicalDeviceCount;
+        vkEnumeratePhysicalDevices(instance,physicalDeviceCount,null);
+        
+        std::vector<PhysicalDevice> physicalDevices(physicalDeviceCount);
+        vkEnumeratePhysicalDevices(instance,physicalDeviceCount,physicalDevices.data());
       }
       
-      VkResult createMacOSSurfaceMVK(const VkMacOSSurfaceCreateInfoMVK* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createMacOSSurfaceMVK(const VkMacOSSurfaceCreateInfoMVK* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateMacOSSurfaceMVK(instance,createInfo,allocator,surface);
       }
       
-      VkResult createXcbSurfaceKHR(const VkXcbSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createXcbSurfaceKHR(const VkXcbSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateXcbSurfaceKHR(instance,createInfo,allocator,surface);
       }
       
       void destroyInstance(const VkAllocationCallbacks* allocator){
-        vkDestroyInstance(instance,allocator);
+        
       }
       
       void debugReportMessageEXT(VkDebugReportFlagsEXT flags,VkDebugReportObjectTypeEXT objectType,uint64_t object,size_t location,int32_t messageCode,std::string layerPrefix,std::string message){
-        vkDebugReportMessageEXT(instance,flags,objectType,object,location,messageCode,layerPrefix,message);
+        
       }
       
-      VkResult enumeratePhysicalDeviceGroupsKHX(std::vector<VkPhysicalDeviceGroupPropertiesKHX> physicalDeviceGroupProperties){
-        vkEnumeratePhysicalDeviceGroupsKHX(instance,physicalDeviceGroupCount,physicalDeviceGroupProperties);
+      std::vector<VkPhysicalDeviceGroupPropertiesKHX> enumeratePhysicalDeviceGroupsKHX(){
+        uint32_t* physicalDeviceGroupCount;
+        vkEnumeratePhysicalDeviceGroupsKHX(instance,physicalDeviceGroupCount,null);
+        
+        std::vector<VkPhysicalDeviceGroupPropertiesKHX> physicalDeviceGroupProperties(physicalDeviceGroupCount);
+        vkEnumeratePhysicalDeviceGroupsKHX(instance,physicalDeviceGroupCount,physicalDeviceGroupProperties.data());
       }
       
-      VkResult createMirSurfaceKHR(const VkMirSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createMirSurfaceKHR(const VkMirSurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateMirSurfaceKHR(instance,createInfo,allocator,surface);
       }
       
-      VkResult createDisplayPlaneSurfaceKHR(const VkDisplaySurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SurfaceKHR* surface){
+      SurfaceKHR* createDisplayPlaneSurfaceKHR(const VkDisplaySurfaceCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SurfaceKHR* surface;
         vkCreateDisplayPlaneSurfaceKHR(instance,createInfo,allocator,surface);
       }
     private:
@@ -420,179 +462,268 @@ namespace vk{
           instance(instance_){
       }
       
-      void getPhysicalDeviceQueueFamilyProperties(std::vector<VkQueueFamilyProperties> queueFamilyProperties){
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice,queueFamilyPropertyCount,queueFamilyProperties);
+      std::vector<VkQueueFamilyProperties> getPhysicalDeviceQueueFamilyProperties(){
+        uint32_t* queueFamilyPropertyCount;
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice,queueFamilyPropertyCount,null);
+        
+        std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyPropertyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice,queueFamilyPropertyCount,queueFamilyProperties.data());
       }
       
-      void getPhysicalDeviceSparseImageFormatProperties2KHR(const VkPhysicalDeviceSparseImageFormatInfo2KHR* formatInfo,std::vector<VkSparseImageFormatProperties2KHR> properties){
-        vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice,formatInfo,propertyCount,properties);
+      std::vector<VkSparseImageFormatProperties2KHR> getPhysicalDeviceSparseImageFormatProperties2KHR(const VkPhysicalDeviceSparseImageFormatInfo2KHR* formatInfo){
+        uint32_t* propertyCount;
+        vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice,formatInfo,propertyCount,null);
+        
+        std::vector<VkSparseImageFormatProperties2KHR> properties(propertyCount);
+        vkGetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice,formatInfo,propertyCount,properties.data());
       }
       
-      void getPhysicalDeviceGeneratedCommandsPropertiesNVX(VkDeviceGeneratedCommandsFeaturesNVX* features,VkDeviceGeneratedCommandsLimitsNVX* limits){
+      VkDeviceGeneratedCommandsLimitsNVX* getPhysicalDeviceGeneratedCommandsPropertiesNVX(){
+        VkDeviceGeneratedCommandsFeaturesNVX* features;
+        vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(physicalDevice,features,null);
+        
+        VkDeviceGeneratedCommandsLimitsNVX* limits;
         vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(physicalDevice,features,limits);
       }
       
-      VkResult getPhysicalDeviceSurfaceFormats2KHR(const VkPhysicalDeviceSurfaceInfo2KHR* surfaceInfo,std::vector<VkSurfaceFormat2KHR> surfaceFormats){
-        vkGetPhysicalDeviceSurfaceFormats2KHR(physicalDevice,surfaceInfo,surfaceFormatCount,surfaceFormats);
+      std::vector<VkSurfaceFormat2KHR> getPhysicalDeviceSurfaceFormats2KHR(const VkPhysicalDeviceSurfaceInfo2KHR* surfaceInfo){
+        uint32_t* surfaceFormatCount;
+        vkGetPhysicalDeviceSurfaceFormats2KHR(physicalDevice,surfaceInfo,surfaceFormatCount,null);
+        
+        std::vector<VkSurfaceFormat2KHR> surfaceFormats(surfaceFormatCount);
+        vkGetPhysicalDeviceSurfaceFormats2KHR(physicalDevice,surfaceInfo,surfaceFormatCount,surfaceFormats.data());
       }
       
-      VkResult getPhysicalDevicePresentRectanglesKHX(SurfaceKHR surface,std::vector<VkRect2D> rects){
-        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surface,rectCount,rects);
+      std::vector<VkRect2D> getPhysicalDevicePresentRectanglesKHX(SurfaceKHR surface){
+        uint32_t* rectCount;
+        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surface,rectCount,null);
+        
+        std::vector<VkRect2D> rects(rectCount);
+        vkGetPhysicalDevicePresentRectanglesKHX(physicalDevice,surface,rectCount,rects.data());
       }
       
       VkBool32 getPhysicalDeviceWaylandPresentationSupportKHR(uint32_t queueFamilyIndex,struct wl_display* display){
-        vkGetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice,queueFamilyIndex,display);
+        
       }
       
-      VkResult createDevice(const VkDeviceCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Device* device){
+      Device* createDevice(const VkDeviceCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Device* device;
         vkCreateDevice(physicalDevice,createInfo,allocator,device);
       }
       
-      VkResult createDisplayModeKHR(DisplayKHR display,const VkDisplayModeCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,DisplayModeKHR* mode){
+      DisplayModeKHR* createDisplayModeKHR(DisplayKHR display,const VkDisplayModeCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        DisplayModeKHR* mode;
         vkCreateDisplayModeKHR(physicalDevice,display,createInfo,allocator,mode);
       }
       
-      VkResult enumerateDeviceLayerProperties(std::vector<VkLayerProperties> properties){
-        vkEnumerateDeviceLayerProperties(physicalDevice,propertyCount,properties);
+      std::vector<VkLayerProperties> enumerateDeviceLayerProperties(){
+        uint32_t* propertyCount;
+        vkEnumerateDeviceLayerProperties(physicalDevice,propertyCount,null);
+        
+        std::vector<VkLayerProperties> properties(propertyCount);
+        vkEnumerateDeviceLayerProperties(physicalDevice,propertyCount,properties.data());
       }
       
-      void getPhysicalDeviceFeatures(VkPhysicalDeviceFeatures* features){
+      VkPhysicalDeviceFeatures* getPhysicalDeviceFeatures(){
+        VkPhysicalDeviceFeatures* features;
         vkGetPhysicalDeviceFeatures(physicalDevice,features);
       }
       
-      void getPhysicalDeviceQueueFamilyProperties2KHR(std::vector<VkQueueFamilyProperties2KHR> queueFamilyProperties){
-        vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice,queueFamilyPropertyCount,queueFamilyProperties);
+      std::vector<VkQueueFamilyProperties2KHR> getPhysicalDeviceQueueFamilyProperties2KHR(){
+        uint32_t* queueFamilyPropertyCount;
+        vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice,queueFamilyPropertyCount,null);
+        
+        std::vector<VkQueueFamilyProperties2KHR> queueFamilyProperties(queueFamilyPropertyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice,queueFamilyPropertyCount,queueFamilyProperties.data());
       }
       
-      void getPhysicalDeviceExternalSemaphorePropertiesKHR(const VkPhysicalDeviceExternalSemaphoreInfoKHR* externalSemaphoreInfo,VkExternalSemaphorePropertiesKHR* externalSemaphoreProperties){
+      VkExternalSemaphorePropertiesKHR* getPhysicalDeviceExternalSemaphorePropertiesKHR(const VkPhysicalDeviceExternalSemaphoreInfoKHR* externalSemaphoreInfo){
+        VkExternalSemaphorePropertiesKHR* externalSemaphoreProperties;
         vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice,externalSemaphoreInfo,externalSemaphoreProperties);
       }
       
-      void getPhysicalDeviceFeatures2KHR(VkPhysicalDeviceFeatures2KHR* features){
+      VkPhysicalDeviceFeatures2KHR* getPhysicalDeviceFeatures2KHR(){
+        VkPhysicalDeviceFeatures2KHR* features;
         vkGetPhysicalDeviceFeatures2KHR(physicalDevice,features);
       }
       
-      void getPhysicalDeviceMultisamplePropertiesEXT(VkSampleCountFlagBits samples,VkMultisamplePropertiesEXT* multisampleProperties){
+      VkMultisamplePropertiesEXT* getPhysicalDeviceMultisamplePropertiesEXT(VkSampleCountFlagBits samples){
+        VkMultisamplePropertiesEXT* multisampleProperties;
         vkGetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice,samples,multisampleProperties);
       }
       
-      void getPhysicalDeviceMemoryProperties(VkPhysicalDeviceMemoryProperties* memoryProperties){
+      VkPhysicalDeviceMemoryProperties* getPhysicalDeviceMemoryProperties(){
+        VkPhysicalDeviceMemoryProperties* memoryProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice,memoryProperties);
       }
       
-      VkResult getDisplayModePropertiesKHR(DisplayKHR display,std::vector<VkDisplayModePropertiesKHR> properties){
-        vkGetDisplayModePropertiesKHR(physicalDevice,display,propertyCount,properties);
+      std::vector<VkDisplayModePropertiesKHR> getDisplayModePropertiesKHR(DisplayKHR display){
+        uint32_t* propertyCount;
+        vkGetDisplayModePropertiesKHR(physicalDevice,display,propertyCount,null);
+        
+        std::vector<VkDisplayModePropertiesKHR> properties(propertyCount);
+        vkGetDisplayModePropertiesKHR(physicalDevice,display,propertyCount,properties.data());
       }
       
-      VkResult getPhysicalDeviceSurfacePresentModesKHR(SurfaceKHR surface,std::vector<VkPresentModeKHR> presentModes){
-        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surface,presentModeCount,presentModes);
+      std::vector<VkPresentModeKHR> getPhysicalDeviceSurfacePresentModesKHR(SurfaceKHR surface){
+        uint32_t* presentModeCount;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surface,presentModeCount,null);
+        
+        std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,surface,presentModeCount,presentModes.data());
       }
       
-      VkResult acquireXlibDisplayEXT(Display* dpy,DisplayKHR display){
+      Display* acquireXlibDisplayEXT(DisplayKHR display){
+        Display* dpy;
         vkAcquireXlibDisplayEXT(physicalDevice,dpy,display);
       }
       
-      void getPhysicalDeviceProperties2KHR(VkPhysicalDeviceProperties2KHR* properties){
+      VkPhysicalDeviceProperties2KHR* getPhysicalDeviceProperties2KHR(){
+        VkPhysicalDeviceProperties2KHR* properties;
         vkGetPhysicalDeviceProperties2KHR(physicalDevice,properties);
       }
       
-      VkResult getDisplayPlaneSupportedDisplaysKHR(uint32_t planeIndex,std::vector<DisplayKHR> displays){
-        vkGetDisplayPlaneSupportedDisplaysKHR(physicalDevice,planeIndex,displayCount,displays);
+      std::vector<DisplayKHR> getDisplayPlaneSupportedDisplaysKHR(uint32_t planeIndex){
+        uint32_t* displayCount;
+        vkGetDisplayPlaneSupportedDisplaysKHR(physicalDevice,planeIndex,displayCount,null);
+        
+        std::vector<DisplayKHR> displays(displayCount);
+        vkGetDisplayPlaneSupportedDisplaysKHR(physicalDevice,planeIndex,displayCount,displays.data());
       }
       
-      void getPhysicalDeviceMemoryProperties2KHR(VkPhysicalDeviceMemoryProperties2KHR* memoryProperties){
+      VkPhysicalDeviceMemoryProperties2KHR* getPhysicalDeviceMemoryProperties2KHR(){
+        VkPhysicalDeviceMemoryProperties2KHR* memoryProperties;
         vkGetPhysicalDeviceMemoryProperties2KHR(physicalDevice,memoryProperties);
       }
       
-      VkBool32 getPhysicalDeviceXcbPresentationSupportKHR(uint32_t queueFamilyIndex,xcb_connection_t* connection,xcb_visualid_t visual_id){
+      xcb_connection_t* getPhysicalDeviceXcbPresentationSupportKHR(uint32_t queueFamilyIndex,xcb_visualid_t visual_id){
+        xcb_connection_t* connection;
         vkGetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice,queueFamilyIndex,connection,visual_id);
       }
       
-      VkResult getRandROutputDisplayEXT(Display* dpy,RROutput rrOutput,DisplayKHR* display){
+      DisplayKHR* getRandROutputDisplayEXT(RROutput rrOutput){
+        Display* dpy;
+        vkGetRandROutputDisplayEXT(physicalDevice,dpy,rrOutput,null);
+        
+        DisplayKHR* display;
         vkGetRandROutputDisplayEXT(physicalDevice,dpy,rrOutput,display);
       }
       
-      void getPhysicalDeviceFormatProperties(VkFormat format,VkFormatProperties* formatProperties){
+      VkFormatProperties* getPhysicalDeviceFormatProperties(VkFormat format){
+        VkFormatProperties* formatProperties;
         vkGetPhysicalDeviceFormatProperties(physicalDevice,format,formatProperties);
       }
       
-      VkResult getPhysicalDeviceSurfaceCapabilities2EXT(SurfaceKHR surface,VkSurfaceCapabilities2EXT* surfaceCapabilities){
+      VkSurfaceCapabilities2EXT* getPhysicalDeviceSurfaceCapabilities2EXT(SurfaceKHR surface){
+        VkSurfaceCapabilities2EXT* surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice,surface,surfaceCapabilities);
       }
       
-      VkResult getPhysicalDeviceSurfaceSupportKHR(uint32_t queueFamilyIndex,SurfaceKHR surface,bool* supported){
+      bool* getPhysicalDeviceSurfaceSupportKHR(uint32_t queueFamilyIndex,SurfaceKHR surface){
+        bool* supported;
         vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice,queueFamilyIndex,surface,supported);
       }
       
-      VkResult getPhysicalDeviceImageFormatProperties2KHR(const VkPhysicalDeviceImageFormatInfo2KHR* imageFormatInfo,VkImageFormatProperties2KHR* imageFormatProperties){
+      VkImageFormatProperties2KHR* getPhysicalDeviceImageFormatProperties2KHR(const VkPhysicalDeviceImageFormatInfo2KHR* imageFormatInfo){
+        VkImageFormatProperties2KHR* imageFormatProperties;
         vkGetPhysicalDeviceImageFormatProperties2KHR(physicalDevice,imageFormatInfo,imageFormatProperties);
       }
       
       VkBool32 getPhysicalDeviceWin32PresentationSupportKHR(uint32_t queueFamilyIndex){
-        vkGetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice,queueFamilyIndex);
+        
       }
       
-      VkBool32 getPhysicalDeviceXlibPresentationSupportKHR(uint32_t queueFamilyIndex,Display* dpy,VisualID visualID){
+      Display* getPhysicalDeviceXlibPresentationSupportKHR(uint32_t queueFamilyIndex,VisualID visualID){
+        Display* dpy;
         vkGetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice,queueFamilyIndex,dpy,visualID);
       }
       
-      VkResult getPhysicalDeviceImageFormatProperties(VkFormat format,VkImageType type,VkImageTiling tiling,VkImageUsageFlags usage,VkImageCreateFlags flags,VkImageFormatProperties* imageFormatProperties){
+      VkImageFormatProperties* getPhysicalDeviceImageFormatProperties(VkFormat format,VkImageType type,VkImageTiling tiling,VkImageUsageFlags usage,VkImageCreateFlags flags){
+        VkImageFormatProperties* imageFormatProperties;
         vkGetPhysicalDeviceImageFormatProperties(physicalDevice,format,type,tiling,usage,flags,imageFormatProperties);
       }
       
-      VkResult enumerateDeviceExtensionProperties(std::string layerName,std::vector<VkExtensionProperties> properties){
-        vkEnumerateDeviceExtensionProperties(physicalDevice,layerName,propertyCount,properties);
+      std::vector<VkExtensionProperties> enumerateDeviceExtensionProperties(std::string layerName){
+        uint32_t* propertyCount;
+        vkEnumerateDeviceExtensionProperties(physicalDevice,layerName,propertyCount,null);
+        
+        std::vector<VkExtensionProperties> properties(propertyCount);
+        vkEnumerateDeviceExtensionProperties(physicalDevice,layerName,propertyCount,properties.data());
       }
       
-      void getPhysicalDeviceExternalFencePropertiesKHR(const VkPhysicalDeviceExternalFenceInfoKHR* externalFenceInfo,VkExternalFencePropertiesKHR* externalFenceProperties){
+      VkExternalFencePropertiesKHR* getPhysicalDeviceExternalFencePropertiesKHR(const VkPhysicalDeviceExternalFenceInfoKHR* externalFenceInfo){
+        VkExternalFencePropertiesKHR* externalFenceProperties;
         vkGetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice,externalFenceInfo,externalFenceProperties);
       }
       
-      VkResult getPhysicalDeviceSurfaceCapabilities2KHR(const VkPhysicalDeviceSurfaceInfo2KHR* surfaceInfo,VkSurfaceCapabilities2KHR* surfaceCapabilities){
+      VkSurfaceCapabilities2KHR* getPhysicalDeviceSurfaceCapabilities2KHR(const VkPhysicalDeviceSurfaceInfo2KHR* surfaceInfo){
+        VkSurfaceCapabilities2KHR* surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice,surfaceInfo,surfaceCapabilities);
       }
       
-      VkResult getPhysicalDeviceExternalImageFormatPropertiesNV(VkFormat format,VkImageType type,VkImageTiling tiling,VkImageUsageFlags usage,VkImageCreateFlags flags,VkExternalMemoryHandleTypeFlagsNV externalHandleType,VkExternalImageFormatPropertiesNV* externalImageFormatProperties){
+      VkExternalImageFormatPropertiesNV* getPhysicalDeviceExternalImageFormatPropertiesNV(VkFormat format,VkImageType type,VkImageTiling tiling,VkImageUsageFlags usage,VkImageCreateFlags flags,VkExternalMemoryHandleTypeFlagsNV externalHandleType){
+        VkExternalImageFormatPropertiesNV* externalImageFormatProperties;
         vkGetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice,format,type,tiling,usage,flags,externalHandleType,externalImageFormatProperties);
       }
       
-      void getPhysicalDeviceExternalBufferPropertiesKHR(const VkPhysicalDeviceExternalBufferInfoKHR* externalBufferInfo,VkExternalBufferPropertiesKHR* externalBufferProperties){
+      VkExternalBufferPropertiesKHR* getPhysicalDeviceExternalBufferPropertiesKHR(const VkPhysicalDeviceExternalBufferInfoKHR* externalBufferInfo){
+        VkExternalBufferPropertiesKHR* externalBufferProperties;
         vkGetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice,externalBufferInfo,externalBufferProperties);
       }
       
-      VkResult getPhysicalDeviceDisplayPlanePropertiesKHR(std::vector<VkDisplayPlanePropertiesKHR> properties){
-        vkGetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice,propertyCount,properties);
+      std::vector<VkDisplayPlanePropertiesKHR> getPhysicalDeviceDisplayPlanePropertiesKHR(){
+        uint32_t* propertyCount;
+        vkGetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice,propertyCount,null);
+        
+        std::vector<VkDisplayPlanePropertiesKHR> properties(propertyCount);
+        vkGetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice,propertyCount,properties.data());
       }
       
-      VkResult getPhysicalDeviceDisplayPropertiesKHR(std::vector<VkDisplayPropertiesKHR> properties){
-        vkGetPhysicalDeviceDisplayPropertiesKHR(physicalDevice,propertyCount,properties);
+      std::vector<VkDisplayPropertiesKHR> getPhysicalDeviceDisplayPropertiesKHR(){
+        uint32_t* propertyCount;
+        vkGetPhysicalDeviceDisplayPropertiesKHR(physicalDevice,propertyCount,null);
+        
+        std::vector<VkDisplayPropertiesKHR> properties(propertyCount);
+        vkGetPhysicalDeviceDisplayPropertiesKHR(physicalDevice,propertyCount,properties.data());
       }
       
-      void getPhysicalDeviceSparseImageFormatProperties(VkFormat format,VkImageType type,VkSampleCountFlagBits samples,VkImageUsageFlags usage,VkImageTiling tiling,std::vector<VkSparseImageFormatProperties> properties){
-        vkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice,format,type,samples,usage,tiling,propertyCount,properties);
+      std::vector<VkSparseImageFormatProperties> getPhysicalDeviceSparseImageFormatProperties(VkFormat format,VkImageType type,VkSampleCountFlagBits samples,VkImageUsageFlags usage,VkImageTiling tiling){
+        uint32_t* propertyCount;
+        vkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice,format,type,samples,usage,tiling,propertyCount,null);
+        
+        std::vector<VkSparseImageFormatProperties> properties(propertyCount);
+        vkGetPhysicalDeviceSparseImageFormatProperties(physicalDevice,format,type,samples,usage,tiling,propertyCount,properties.data());
       }
       
-      void getPhysicalDeviceProperties(VkPhysicalDeviceProperties* properties){
+      VkPhysicalDeviceProperties* getPhysicalDeviceProperties(){
+        VkPhysicalDeviceProperties* properties;
         vkGetPhysicalDeviceProperties(physicalDevice,properties);
       }
       
-      VkResult getPhysicalDeviceSurfaceFormatsKHR(SurfaceKHR surface,std::vector<VkSurfaceFormatKHR> surfaceFormats){
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surface,surfaceFormatCount,surfaceFormats);
+      std::vector<VkSurfaceFormatKHR> getPhysicalDeviceSurfaceFormatsKHR(SurfaceKHR surface){
+        uint32_t* surfaceFormatCount;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surface,surfaceFormatCount,null);
+        
+        std::vector<VkSurfaceFormatKHR> surfaceFormats(surfaceFormatCount);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,surface,surfaceFormatCount,surfaceFormats.data());
       }
       
-      VkResult getPhysicalDeviceSurfaceCapabilitiesKHR(SurfaceKHR surface,VkSurfaceCapabilitiesKHR* surfaceCapabilities){
+      VkSurfaceCapabilitiesKHR* getPhysicalDeviceSurfaceCapabilitiesKHR(SurfaceKHR surface){
+        VkSurfaceCapabilitiesKHR* surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice,surface,surfaceCapabilities);
       }
       
-      VkBool32 getPhysicalDeviceMirPresentationSupportKHR(uint32_t queueFamilyIndex,MirConnection* connection){
+      MirConnection* getPhysicalDeviceMirPresentationSupportKHR(uint32_t queueFamilyIndex){
+        MirConnection* connection;
         vkGetPhysicalDeviceMirPresentationSupportKHR(physicalDevice,queueFamilyIndex,connection);
       }
       
       VkResult releaseDisplayEXT(DisplayKHR display){
-        vkReleaseDisplayEXT(physicalDevice,display);
+        
       }
       
-      void getPhysicalDeviceFormatProperties2KHR(VkFormat format,VkFormatProperties2KHR* formatProperties){
+      VkFormatProperties2KHR* getPhysicalDeviceFormatProperties2KHR(VkFormat format){
+        VkFormatProperties2KHR* formatProperties;
         vkGetPhysicalDeviceFormatProperties2KHR(physicalDevice,format,formatProperties);
       }
     private:
@@ -607,28 +738,35 @@ namespace vk{
           {
       }
       
-      VkResult createDisplayModeKHR(PhysicalDevice physicalDevice,const VkDisplayModeCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,DisplayModeKHR* mode){
+      DisplayModeKHR* createDisplayModeKHR(PhysicalDevice physicalDevice,const VkDisplayModeCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        DisplayModeKHR* mode;
         vkCreateDisplayModeKHR(physicalDevice,displayKHR,createInfo,allocator,mode);
       }
       
       VkResult displayPowerControlEXT(Device device,const VkDisplayPowerInfoEXT* displayPowerInfo){
-        vkDisplayPowerControlEXT(device,displayKHR,displayPowerInfo);
+        
       }
       
-      VkResult getDisplayModePropertiesKHR(PhysicalDevice physicalDevice,std::vector<VkDisplayModePropertiesKHR> properties){
-        vkGetDisplayModePropertiesKHR(physicalDevice,displayKHR,propertyCount,properties);
+      std::vector<VkDisplayModePropertiesKHR> getDisplayModePropertiesKHR(PhysicalDevice physicalDevice){
+        uint32_t* propertyCount;
+        vkGetDisplayModePropertiesKHR(physicalDevice,displayKHR,propertyCount,null);
+        
+        std::vector<VkDisplayModePropertiesKHR> properties(propertyCount);
+        vkGetDisplayModePropertiesKHR(physicalDevice,displayKHR,propertyCount,properties.data());
       }
       
-      VkResult acquireXlibDisplayEXT(PhysicalDevice physicalDevice,Display* dpy){
+      Display* acquireXlibDisplayEXT(PhysicalDevice physicalDevice){
+        Display* dpy;
         vkAcquireXlibDisplayEXT(physicalDevice,dpy,displayKHR);
       }
       
-      VkResult registerDisplayEventEXT(Device device,const VkDisplayEventInfoEXT* displayEventInfo,const VkAllocationCallbacks* allocator,Fence* fence){
+      Fence* registerDisplayEventEXT(Device device,const VkDisplayEventInfoEXT* displayEventInfo,const VkAllocationCallbacks* allocator){
+        Fence* fence;
         vkRegisterDisplayEventEXT(device,displayKHR,displayEventInfo,allocator,fence);
       }
       
       VkResult releaseDisplayEXT(PhysicalDevice physicalDevice){
-        vkReleaseDisplayEXT(physicalDevice,displayKHR);
+        
       }
     private:
       VkDisplayKHR displayKHR;
@@ -643,7 +781,7 @@ namespace vk{
       }
       
       void destroyImageView(const VkAllocationCallbacks* allocator){
-        vkDestroyImageView((VkDevice)device,imageView,allocator);
+        
       }
     private:
       VkImageView imageView;
@@ -658,7 +796,7 @@ namespace vk{
       }
       
       void destroyIndirectCommandsLayoutNVX(const VkAllocationCallbacks* allocator){
-        vkDestroyIndirectCommandsLayoutNVX((VkDevice)device,indirectCommandsLayoutNVX,allocator);
+        
       }
     private:
       VkIndirectCommandsLayoutNVX indirectCommandsLayoutNVX;
@@ -673,278 +811,339 @@ namespace vk{
       }
       
       void setHdrMetadataEXT(std::vector<SwapchainKHR> swapchains,std::vector<VkHdrMetadataEXT> metadata){
-        vkSetHdrMetadataEXT(device,swapchainCount,swapchains,metadata);
+        
       }
       
-      VkResult createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SamplerYcbcrConversionKHR* ycbcrConversion){
+      SamplerYcbcrConversionKHR* createSamplerYcbcrConversionKHR(const VkSamplerYcbcrConversionCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SamplerYcbcrConversionKHR* ycbcrConversion;
         vkCreateSamplerYcbcrConversionKHR(device,createInfo,allocator,ycbcrConversion);
       }
       
       void updateDescriptorSets(std::vector<VkWriteDescriptorSet> descriptorWrites,std::vector<VkCopyDescriptorSet> descriptorCopies){
-        vkUpdateDescriptorSets(device,descriptorWriteCount,descriptorWrites,descriptorCopyCount,descriptorCopies);
+        
       }
       
-      VkResult getSwapchainImagesKHR(SwapchainKHR swapchain,std::vector<Image> swapchainImages){
-        vkGetSwapchainImagesKHR(device,swapchain,swapchainImageCount,swapchainImages);
+      std::vector<Image> getSwapchainImagesKHR(SwapchainKHR swapchain){
+        uint32_t* swapchainImageCount;
+        vkGetSwapchainImagesKHR(device,swapchain,swapchainImageCount,null);
+        
+        std::vector<Image> swapchainImages(swapchainImageCount);
+        vkGetSwapchainImagesKHR(device,swapchain,swapchainImageCount,swapchainImages.data());
       }
       
       VkResult importFenceWin32HandleKHR(const VkImportFenceWin32HandleInfoKHR* importFenceWin32HandleInfo){
-        vkImportFenceWin32HandleKHR(device,importFenceWin32HandleInfo);
+        
       }
       
       VkResult debugMarkerSetObjectNameEXT(const VkDebugMarkerObjectNameInfoEXT* nameInfo){
-        vkDebugMarkerSetObjectNameEXT(device,nameInfo);
+        
       }
       
-      VkResult getRefreshCycleDurationGOOGLE(SwapchainKHR swapchain,VkRefreshCycleDurationGOOGLE* displayTimingProperties){
+      VkRefreshCycleDurationGOOGLE* getRefreshCycleDurationGOOGLE(SwapchainKHR swapchain){
+        VkRefreshCycleDurationGOOGLE* displayTimingProperties;
         vkGetRefreshCycleDurationGOOGLE(device,swapchain,displayTimingProperties);
       }
       
       VkResult bindImageMemory2KHR(std::vector<VkBindImageMemoryInfoKHR> bindInfos){
-        vkBindImageMemory2KHR(device,bindInfoCount,bindInfos);
+        
       }
       
       VkResult bindBufferMemory2KHR(std::vector<VkBindBufferMemoryInfoKHR> bindInfos){
-        vkBindBufferMemory2KHR(device,bindInfoCount,bindInfos);
+        
       }
       
       VkResult importSemaphoreWin32HandleKHR(const VkImportSemaphoreWin32HandleInfoKHR* importSemaphoreWin32HandleInfo){
-        vkImportSemaphoreWin32HandleKHR(device,importSemaphoreWin32HandleInfo);
+        
       }
       
-      VkResult getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* getFdInfo,int* fd){
+      int* getSemaphoreFdKHR(const VkSemaphoreGetFdInfoKHR* getFdInfo){
+        int* fd;
         vkGetSemaphoreFdKHR(device,getFdInfo,fd);
       }
       
-      VkResult getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType,HANDLE handle,VkMemoryWin32HandlePropertiesKHR* memoryWin32HandleProperties){
+      VkMemoryWin32HandlePropertiesKHR* getMemoryWin32HandlePropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType,HANDLE handle){
+        VkMemoryWin32HandlePropertiesKHR* memoryWin32HandleProperties;
         vkGetMemoryWin32HandlePropertiesKHR(device,handleType,handle,memoryWin32HandleProperties);
       }
       
-      VkResult createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,DescriptorUpdateTemplateKHR* descriptorUpdateTemplate){
+      DescriptorUpdateTemplateKHR* createDescriptorUpdateTemplateKHR(const VkDescriptorUpdateTemplateCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        DescriptorUpdateTemplateKHR* descriptorUpdateTemplate;
         vkCreateDescriptorUpdateTemplateKHR(device,createInfo,allocator,descriptorUpdateTemplate);
       }
       
       VkResult flushMappedMemoryRanges(std::vector<VkMappedMemoryRange> memoryRanges){
-        vkFlushMappedMemoryRanges(device,memoryRangeCount,memoryRanges);
+        
       }
       
-      VkResult createDescriptorPool(const VkDescriptorPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator,DescriptorPool* descriptorPool){
+      DescriptorPool* createDescriptorPool(const VkDescriptorPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        DescriptorPool* descriptorPool;
         vkCreateDescriptorPool(device,createInfo,allocator,descriptorPool);
       }
       
       VkResult resetFences(std::vector<Fence> fences){
-        vkResetFences(device,fenceCount,fences);
+        
       }
       
-      void getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2KHR* info,std::vector<VkSparseImageMemoryRequirements2KHR> sparseMemoryRequirements){
-        vkGetImageSparseMemoryRequirements2KHR(device,info,sparseMemoryRequirementCount,sparseMemoryRequirements);
+      std::vector<VkSparseImageMemoryRequirements2KHR> getImageSparseMemoryRequirements2KHR(const VkImageSparseMemoryRequirementsInfo2KHR* info){
+        uint32_t* sparseMemoryRequirementCount;
+        vkGetImageSparseMemoryRequirements2KHR(device,info,sparseMemoryRequirementCount,null);
+        
+        std::vector<VkSparseImageMemoryRequirements2KHR> sparseMemoryRequirements(sparseMemoryRequirementCount);
+        vkGetImageSparseMemoryRequirements2KHR(device,info,sparseMemoryRequirementCount,sparseMemoryRequirements.data());
       }
       
-      VkResult createImage(const VkImageCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Image* image){
+      Image* createImage(const VkImageCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Image* image;
         vkCreateImage(device,createInfo,allocator,image);
       }
       
-      VkResult createShaderModule(const VkShaderModuleCreateInfo* createInfo,const VkAllocationCallbacks* allocator,ShaderModule* shaderModule){
+      ShaderModule* createShaderModule(const VkShaderModuleCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        ShaderModule* shaderModule;
         vkCreateShaderModule(device,createInfo,allocator,shaderModule);
       }
       
-      VkResult acquireNextImage2KHX(const VkAcquireNextImageInfoKHX* acquireInfo,uint32_t* imageIndex){
+      uint32_t* acquireNextImage2KHX(const VkAcquireNextImageInfoKHX* acquireInfo){
+        uint32_t* imageIndex;
         vkAcquireNextImage2KHX(device,acquireInfo,imageIndex);
       }
       
       void destroyDevice(const VkAllocationCallbacks* allocator){
-        vkDestroyDevice(device,allocator);
+        
       }
       
       VkResult getSwapchainStatusKHR(SwapchainKHR swapchain){
-        vkGetSwapchainStatusKHR(device,swapchain);
+        
       }
       
-      VkResult createBuffer(const VkBufferCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Buffer* buffer){
+      Buffer* createBuffer(const VkBufferCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Buffer* buffer;
         vkCreateBuffer(device,createInfo,allocator,buffer);
       }
       
       VkResult importSemaphoreFdKHR(const VkImportSemaphoreFdInfoKHR* importSemaphoreFdInfo){
-        vkImportSemaphoreFdKHR(device,importSemaphoreFdInfo);
+        
       }
       
-      VkResult createEvent(const VkEventCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Event* event){
+      Event* createEvent(const VkEventCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Event* event;
         vkCreateEvent(device,createInfo,allocator,event);
       }
       
       VkResult displayPowerControlEXT(DisplayKHR display,const VkDisplayPowerInfoEXT* displayPowerInfo){
-        vkDisplayPowerControlEXT(device,display,displayPowerInfo);
+        
       }
       
-      VkResult createIndirectCommandsLayoutNVX(const VkIndirectCommandsLayoutCreateInfoNVX* createInfo,const VkAllocationCallbacks* allocator,IndirectCommandsLayoutNVX* indirectCommandsLayout){
+      IndirectCommandsLayoutNVX* createIndirectCommandsLayoutNVX(const VkIndirectCommandsLayoutCreateInfoNVX* createInfo,const VkAllocationCallbacks* allocator){
+        IndirectCommandsLayoutNVX* indirectCommandsLayout;
         vkCreateIndirectCommandsLayoutNVX(device,createInfo,allocator,indirectCommandsLayout);
       }
       
-      VkResult getPastPresentationTimingGOOGLE(SwapchainKHR swapchain,std::vector<VkPastPresentationTimingGOOGLE> presentationTimings){
-        vkGetPastPresentationTimingGOOGLE(device,swapchain,presentationTimingCount,presentationTimings);
+      std::vector<VkPastPresentationTimingGOOGLE> getPastPresentationTimingGOOGLE(SwapchainKHR swapchain){
+        uint32_t* presentationTimingCount;
+        vkGetPastPresentationTimingGOOGLE(device,swapchain,presentationTimingCount,null);
+        
+        std::vector<VkPastPresentationTimingGOOGLE> presentationTimings(presentationTimingCount);
+        vkGetPastPresentationTimingGOOGLE(device,swapchain,presentationTimingCount,presentationTimings.data());
       }
       
-      VkResult createFence(const VkFenceCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Fence* fence){
+      Fence* createFence(const VkFenceCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Fence* fence;
         vkCreateFence(device,createInfo,allocator,fence);
       }
       
-      VkResult createImageView(const VkImageViewCreateInfo* createInfo,const VkAllocationCallbacks* allocator,ImageView* view){
+      ImageView* createImageView(const VkImageViewCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        ImageView* view;
         vkCreateImageView(device,createInfo,allocator,view);
       }
       
-      VkResult getDeviceGroupSurfacePresentModesKHX(SurfaceKHR surface,VkDeviceGroupPresentModeFlagsKHX* modes){
+      VkDeviceGroupPresentModeFlagsKHX* getDeviceGroupSurfacePresentModesKHX(SurfaceKHR surface){
+        VkDeviceGroupPresentModeFlagsKHX* modes;
         vkGetDeviceGroupSurfacePresentModesKHX(device,surface,modes);
       }
       
-      VkResult createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* createInfo,const VkAllocationCallbacks* allocator,DescriptorSetLayout* setLayout){
+      DescriptorSetLayout* createDescriptorSetLayout(const VkDescriptorSetLayoutCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        DescriptorSetLayout* setLayout;
         vkCreateDescriptorSetLayout(device,createInfo,allocator,setLayout);
       }
       
-      VkResult createQueryPool(const VkQueryPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator,QueryPool* queryPool){
+      QueryPool* createQueryPool(const VkQueryPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        QueryPool* queryPool;
         vkCreateQueryPool(device,createInfo,allocator,queryPool);
       }
       
-      VkResult createRenderPass(const VkRenderPassCreateInfo* createInfo,const VkAllocationCallbacks* allocator,RenderPass* renderPass){
+      RenderPass* createRenderPass(const VkRenderPassCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        RenderPass* renderPass;
         vkCreateRenderPass(device,createInfo,allocator,renderPass);
       }
       
       VkResult deviceWaitIdle(){
-        vkDeviceWaitIdle(device);
+        
       }
       
-      VkResult allocateCommandBuffers(const VkCommandBufferAllocateInfo* allocateInfo,std::vector<CommandBuffer> commandBuffers){
+      std::vector<CommandBuffer> allocateCommandBuffers(const VkCommandBufferAllocateInfo* allocateInfo){
+        std::vector<CommandBuffer> commandBuffers;
         vkAllocateCommandBuffers(device,allocateInfo,commandBuffers);
       }
       
-      void getDeviceQueue(uint32_t queueFamilyIndex,uint32_t queueIndex,Queue* queue){
+      Queue* getDeviceQueue(uint32_t queueFamilyIndex,uint32_t queueIndex){
+        Queue* queue;
         vkGetDeviceQueue(device,queueFamilyIndex,queueIndex,queue);
       }
       
-      VkResult registerDisplayEventEXT(DisplayKHR display,const VkDisplayEventInfoEXT* displayEventInfo,const VkAllocationCallbacks* allocator,Fence* fence){
+      Fence* registerDisplayEventEXT(DisplayKHR display,const VkDisplayEventInfoEXT* displayEventInfo,const VkAllocationCallbacks* allocator){
+        Fence* fence;
         vkRegisterDisplayEventEXT(device,display,displayEventInfo,allocator,fence);
       }
       
-      VkResult createPipelineLayout(const VkPipelineLayoutCreateInfo* createInfo,const VkAllocationCallbacks* allocator,PipelineLayout* pipelineLayout){
+      PipelineLayout* createPipelineLayout(const VkPipelineLayoutCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        PipelineLayout* pipelineLayout;
         vkCreatePipelineLayout(device,createInfo,allocator,pipelineLayout);
       }
       
-      VkResult createFramebuffer(const VkFramebufferCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Framebuffer* framebuffer){
+      Framebuffer* createFramebuffer(const VkFramebufferCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Framebuffer* framebuffer;
         vkCreateFramebuffer(device,createInfo,allocator,framebuffer);
       }
       
-      VkResult getFenceFdKHR(const VkFenceGetFdInfoKHR* getFdInfo,int* fd){
+      int* getFenceFdKHR(const VkFenceGetFdInfoKHR* getFdInfo){
+        int* fd;
         vkGetFenceFdKHR(device,getFdInfo,fd);
       }
       
-      void getDeviceGroupPeerMemoryFeaturesKHX(uint32_t heapIndex,uint32_t localDeviceIndex,uint32_t remoteDeviceIndex,VkPeerMemoryFeatureFlagsKHX* peerMemoryFeatures){
+      VkPeerMemoryFeatureFlagsKHX* getDeviceGroupPeerMemoryFeaturesKHX(uint32_t heapIndex,uint32_t localDeviceIndex,uint32_t remoteDeviceIndex){
+        VkPeerMemoryFeatureFlagsKHX* peerMemoryFeatures;
         vkGetDeviceGroupPeerMemoryFeaturesKHX(device,heapIndex,localDeviceIndex,remoteDeviceIndex,peerMemoryFeatures);
       }
       
-      void getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2KHR* info,VkMemoryRequirements2KHR* memoryRequirements){
+      VkMemoryRequirements2KHR* getImageMemoryRequirements2KHR(const VkImageMemoryRequirementsInfo2KHR* info){
+        VkMemoryRequirements2KHR* memoryRequirements;
         vkGetImageMemoryRequirements2KHR(device,info,memoryRequirements);
       }
       
-      VkResult createBufferView(const VkBufferViewCreateInfo* createInfo,const VkAllocationCallbacks* allocator,BufferView* view){
+      BufferView* createBufferView(const VkBufferViewCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        BufferView* view;
         vkCreateBufferView(device,createInfo,allocator,view);
       }
       
-      VkResult createSemaphore(const VkSemaphoreCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Semaphore* semaphore){
+      Semaphore* createSemaphore(const VkSemaphoreCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Semaphore* semaphore;
         vkCreateSemaphore(device,createInfo,allocator,semaphore);
       }
       
-      VkResult createObjectTableNVX(const VkObjectTableCreateInfoNVX* createInfo,const VkAllocationCallbacks* allocator,ObjectTableNVX* objectTable){
+      ObjectTableNVX* createObjectTableNVX(const VkObjectTableCreateInfoNVX* createInfo,const VkAllocationCallbacks* allocator){
+        ObjectTableNVX* objectTable;
         vkCreateObjectTableNVX(device,createInfo,allocator,objectTable);
       }
       
       VkResult importFenceFdKHR(const VkImportFenceFdInfoKHR* importFenceFdInfo){
-        vkImportFenceFdKHR(device,importFenceFdInfo);
+        
       }
       
-      VkResult createSharedSwapchainsKHR(std::vector<VkSwapchainCreateInfoKHR> createInfos,const VkAllocationCallbacks* allocator,std::vector<SwapchainKHR> swapchains){
-        vkCreateSharedSwapchainsKHR(device,swapchainCount,createInfos,allocator,swapchains);
+      std::vector<SwapchainKHR> createSharedSwapchainsKHR(std::vector<VkSwapchainCreateInfoKHR> createInfos,const VkAllocationCallbacks* allocator){
+        uint32_t swapchainCount;
+        vkCreateSharedSwapchainsKHR(device,swapchainCount,createInfos.data(),allocator,null);
+        
+        std::vector<SwapchainKHR> swapchains(swapchainCount);
+        vkCreateSharedSwapchainsKHR(device,swapchainCount,createInfos.data(),allocator,swapchains.data());
       }
       
-      VkResult createCommandPool(const VkCommandPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator,CommandPool* commandPool){
+      CommandPool* createCommandPool(const VkCommandPoolCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        CommandPool* commandPool;
         vkCreateCommandPool(device,createInfo,allocator,commandPool);
       }
       
-      VkResult getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* getWin32HandleInfo,HANDLE* handle){
+      HANDLE* getSemaphoreWin32HandleKHR(const VkSemaphoreGetWin32HandleInfoKHR* getWin32HandleInfo){
+        HANDLE* handle;
         vkGetSemaphoreWin32HandleKHR(device,getWin32HandleInfo,handle);
       }
       
-      VkResult getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* getWin32HandleInfo,HANDLE* handle){
+      HANDLE* getFenceWin32HandleKHR(const VkFenceGetWin32HandleInfoKHR* getWin32HandleInfo){
+        HANDLE* handle;
         vkGetFenceWin32HandleKHR(device,getWin32HandleInfo,handle);
       }
       
       VkResult waitForFences(std::vector<Fence> fences,bool waitAll,uint64_t timeout){
-        vkWaitForFences(device,fenceCount,fences,waitAll,timeout);
+        
       }
       
-      VkResult createSwapchainKHR(const VkSwapchainCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator,SwapchainKHR* swapchain){
+      SwapchainKHR* createSwapchainKHR(const VkSwapchainCreateInfoKHR* createInfo,const VkAllocationCallbacks* allocator){
+        SwapchainKHR* swapchain;
         vkCreateSwapchainKHR(device,createInfo,allocator,swapchain);
       }
       
-      VkResult getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType,int fd,VkMemoryFdPropertiesKHR* memoryFdProperties){
+      VkMemoryFdPropertiesKHR* getMemoryFdPropertiesKHR(VkExternalMemoryHandleTypeFlagBitsKHR handleType,int fd){
+        VkMemoryFdPropertiesKHR* memoryFdProperties;
         vkGetMemoryFdPropertiesKHR(device,handleType,fd,memoryFdProperties);
       }
       
-      VkResult createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* createInfo,const VkAllocationCallbacks* allocator,ValidationCacheEXT* validationCache){
+      ValidationCacheEXT* createValidationCacheEXT(const VkValidationCacheCreateInfoEXT* createInfo,const VkAllocationCallbacks* allocator){
+        ValidationCacheEXT* validationCache;
         vkCreateValidationCacheEXT(device,createInfo,allocator,validationCache);
       }
       
-      VkResult getDeviceGroupPresentCapabilitiesKHX(VkDeviceGroupPresentCapabilitiesKHX* deviceGroupPresentCapabilities){
+      VkDeviceGroupPresentCapabilitiesKHX* getDeviceGroupPresentCapabilitiesKHX(){
+        VkDeviceGroupPresentCapabilitiesKHX* deviceGroupPresentCapabilities;
         vkGetDeviceGroupPresentCapabilitiesKHX(device,deviceGroupPresentCapabilities);
       }
       
       void destroySwapchainKHR(SwapchainKHR swapchain,const VkAllocationCallbacks* allocator){
-        vkDestroySwapchainKHR(device,swapchain,allocator);
+        
       }
       
       VkResult invalidateMappedMemoryRanges(std::vector<VkMappedMemoryRange> memoryRanges){
-        vkInvalidateMappedMemoryRanges(device,memoryRangeCount,memoryRanges);
+        
       }
       
-      VkResult getSwapchainCounterEXT(SwapchainKHR swapchain,VkSurfaceCounterFlagBitsEXT counter,uint64_t* counterValue){
+      uint64_t* getSwapchainCounterEXT(SwapchainKHR swapchain,VkSurfaceCounterFlagBitsEXT counter){
+        uint64_t* counterValue;
         vkGetSwapchainCounterEXT(device,swapchain,counter,counterValue);
       }
       
-      VkResult createSampler(const VkSamplerCreateInfo* createInfo,const VkAllocationCallbacks* allocator,Sampler* sampler){
+      Sampler* createSampler(const VkSamplerCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        Sampler* sampler;
         vkCreateSampler(device,createInfo,allocator,sampler);
       }
       
-      VkResult createPipelineCache(const VkPipelineCacheCreateInfo* createInfo,const VkAllocationCallbacks* allocator,PipelineCache* pipelineCache){
+      PipelineCache* createPipelineCache(const VkPipelineCacheCreateInfo* createInfo,const VkAllocationCallbacks* allocator){
+        PipelineCache* pipelineCache;
         vkCreatePipelineCache(device,createInfo,allocator,pipelineCache);
       }
       
-      VkResult getMemoryFdKHR(const VkMemoryGetFdInfoKHR* getFdInfo,int* fd){
+      int* getMemoryFdKHR(const VkMemoryGetFdInfoKHR* getFdInfo){
+        int* fd;
         vkGetMemoryFdKHR(device,getFdInfo,fd);
       }
       
       VkResult debugMarkerSetObjectTagEXT(const VkDebugMarkerObjectTagInfoEXT* tagInfo){
-        vkDebugMarkerSetObjectTagEXT(device,tagInfo);
+        
       }
       
       PFN_vkVoidFunction getDeviceProcAddr(std::string name){
-        vkGetDeviceProcAddr(device,name);
+        
       }
       
-      VkResult getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* getWin32HandleInfo,HANDLE* handle){
+      HANDLE* getMemoryWin32HandleKHR(const VkMemoryGetWin32HandleInfoKHR* getWin32HandleInfo){
+        HANDLE* handle;
         vkGetMemoryWin32HandleKHR(device,getWin32HandleInfo,handle);
       }
       
-      VkResult allocateDescriptorSets(const VkDescriptorSetAllocateInfo* allocateInfo,std::vector<DescriptorSet> descriptorSets){
+      std::vector<DescriptorSet> allocateDescriptorSets(const VkDescriptorSetAllocateInfo* allocateInfo){
+        std::vector<DescriptorSet> descriptorSets;
         vkAllocateDescriptorSets(device,allocateInfo,descriptorSets);
       }
       
-      VkResult allocateMemory(const VkMemoryAllocateInfo* allocateInfo,const VkAllocationCallbacks* allocator,DeviceMemory* memory){
+      DeviceMemory* allocateMemory(const VkMemoryAllocateInfo* allocateInfo,const VkAllocationCallbacks* allocator){
+        DeviceMemory* memory;
         vkAllocateMemory(device,allocateInfo,allocator,memory);
       }
       
-      void getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2KHR* info,VkMemoryRequirements2KHR* memoryRequirements){
+      VkMemoryRequirements2KHR* getBufferMemoryRequirements2KHR(const VkBufferMemoryRequirementsInfo2KHR* info){
+        VkMemoryRequirements2KHR* memoryRequirements;
         vkGetBufferMemoryRequirements2KHR(device,info,memoryRequirements);
       }
       
-      VkResult registerDeviceEventEXT(const VkDeviceEventInfoEXT* deviceEventInfo,const VkAllocationCallbacks* allocator,Fence* fence){
+      Fence* registerDeviceEventEXT(const VkDeviceEventInfoEXT* deviceEventInfo,const VkAllocationCallbacks* allocator){
+        Fence* fence;
         vkRegisterDeviceEventEXT(device,deviceEventInfo,allocator,fence);
       }
     private:
@@ -960,15 +1159,15 @@ namespace vk{
       }
       
       void destroyDescriptorUpdateTemplateKHR(const VkAllocationCallbacks* allocator){
-        vkDestroyDescriptorUpdateTemplateKHR((VkDevice)device,descriptorUpdateTemplateKHR,allocator);
+        
       }
       
       void cmdPushDescriptorSetWithTemplateKHR(CommandBuffer commandBuffer,PipelineLayout layout,uint32_t set,const void* data){
-        vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer,descriptorUpdateTemplateKHR,layout,set,data);
+        
       }
       
       void updateDescriptorSetWithTemplateKHR(DescriptorSet descriptorSet,const void* data){
-        vkUpdateDescriptorSetWithTemplateKHR((VkDevice)device,descriptorSet,descriptorUpdateTemplateKHR,data);
+        
       }
     private:
       VkDescriptorUpdateTemplateKHR descriptorUpdateTemplateKHR;
@@ -983,247 +1182,247 @@ namespace vk{
       }
       
       void cmdUpdateBuffer(Buffer dstBuffer,std::size_t dstOffset,std::vector<void> data){
-        vkCmdUpdateBuffer(commandBuffer,dstBuffer,dstOffset,dataSize,data);
+        
       }
       
       VkResult beginCommandBuffer(const VkCommandBufferBeginInfo* beginInfo){
-        vkBeginCommandBuffer(commandBuffer,beginInfo);
+        
       }
       
       void cmdSetDiscardRectangleEXT(uint32_t firstDiscardRectangle,std::vector<VkRect2D> discardRectangles){
-        vkCmdSetDiscardRectangleEXT(commandBuffer,firstDiscardRectangle,discardRectangleCount,discardRectangles);
+        
       }
       
       void cmdSetViewportWScalingNV(uint32_t firstViewport,std::vector<VkViewportWScalingNV> viewportWScalings){
-        vkCmdSetViewportWScalingNV(commandBuffer,firstViewport,viewportCount,viewportWScalings);
+        
       }
       
       void cmdProcessCommandsNVX(const VkCmdProcessCommandsInfoNVX* processCommandsInfo){
-        vkCmdProcessCommandsNVX(commandBuffer,processCommandsInfo);
+        
       }
       
       void cmdDispatchBaseKHX(uint32_t baseGroupX,uint32_t baseGroupY,uint32_t baseGroupZ,uint32_t groupCountX,uint32_t groupCountY,uint32_t groupCountZ){
-        vkCmdDispatchBaseKHX(commandBuffer,baseGroupX,baseGroupY,baseGroupZ,groupCountX,groupCountY,groupCountZ);
+        
       }
       
       void cmdResetEvent(Event event,VkPipelineStageFlags stageMask){
-        vkCmdResetEvent(commandBuffer,event,stageMask);
+        
       }
       
       void cmdBindVertexBuffers(uint32_t firstBinding,std::vector<Buffer> buffers,std::vector<std::size_t> offsets){
-        vkCmdBindVertexBuffers(commandBuffer,firstBinding,bindingCount,buffers,offsets);
+        
       }
       
       void cmdDispatch(uint32_t groupCountX,uint32_t groupCountY,uint32_t groupCountZ){
-        vkCmdDispatch(commandBuffer,groupCountX,groupCountY,groupCountZ);
+        
       }
       
       void cmdNextSubpass(VkSubpassContents contents){
-        vkCmdNextSubpass(commandBuffer,contents);
+        
       }
       
       void cmdPushDescriptorSetKHR(VkPipelineBindPoint pipelineBindPoint,PipelineLayout layout,uint32_t set,std::vector<VkWriteDescriptorSet> descriptorWrites){
-        vkCmdPushDescriptorSetKHR(commandBuffer,pipelineBindPoint,layout,set,descriptorWriteCount,descriptorWrites);
+        
       }
       
       void cmdSetViewport(uint32_t firstViewport,std::vector<VkViewport> viewports){
-        vkCmdSetViewport(commandBuffer,firstViewport,viewportCount,viewports);
+        
       }
       
       void cmdCopyQueryPoolResults(QueryPool queryPool,uint32_t firstQuery,uint32_t queryCount,Buffer dstBuffer,std::size_t dstOffset,std::size_t stride,VkQueryResultFlags flags){
-        vkCmdCopyQueryPoolResults(commandBuffer,queryPool,firstQuery,queryCount,dstBuffer,dstOffset,stride,flags);
+        
       }
       
       void cmdDrawIndexed(uint32_t indexCount,uint32_t instanceCount,uint32_t firstIndex,int32_t vertexOffset,uint32_t firstInstance){
-        vkCmdDrawIndexed(commandBuffer,indexCount,instanceCount,firstIndex,vertexOffset,firstInstance);
+        
       }
       
       void cmdSetEvent(Event event,VkPipelineStageFlags stageMask){
-        vkCmdSetEvent(commandBuffer,event,stageMask);
+        
       }
       
       void cmdSetSampleLocationsEXT(const VkSampleLocationsInfoEXT* sampleLocationsInfo){
-        vkCmdSetSampleLocationsEXT(commandBuffer,sampleLocationsInfo);
+        
       }
       
       void cmdSetScissor(uint32_t firstScissor,std::vector<VkRect2D> scissors){
-        vkCmdSetScissor(commandBuffer,firstScissor,scissorCount,scissors);
+        
       }
       
       void cmdWriteTimestamp(VkPipelineStageFlagBits pipelineStage,QueryPool queryPool,uint32_t query){
-        vkCmdWriteTimestamp(commandBuffer,pipelineStage,queryPool,query);
+        
       }
       
       void cmdSetLineWidth(float lineWidth){
-        vkCmdSetLineWidth(commandBuffer,lineWidth);
+        
       }
       
       void cmdDrawIndirect(Buffer buffer,std::size_t offset,uint32_t drawCount,uint32_t stride){
-        vkCmdDrawIndirect(commandBuffer,buffer,offset,drawCount,stride);
+        
       }
       
       void cmdDebugMarkerEndEXT(){
-        vkCmdDebugMarkerEndEXT(commandBuffer);
+        
       }
       
       void cmdResolveImage(Image srcImage,VkImageLayout srcImageLayout,Image dstImage,VkImageLayout dstImageLayout,std::vector<VkImageResolve> regions){
-        vkCmdResolveImage(commandBuffer,srcImage,srcImageLayout,dstImage,dstImageLayout,regionCount,regions);
+        
       }
       
       void cmdEndRenderPass(){
-        vkCmdEndRenderPass(commandBuffer);
+        
       }
       
       void cmdResetQueryPool(QueryPool queryPool,uint32_t firstQuery,uint32_t queryCount){
-        vkCmdResetQueryPool(commandBuffer,queryPool,firstQuery,queryCount);
+        
       }
       
       void cmdCopyImage(Image srcImage,VkImageLayout srcImageLayout,Image dstImage,VkImageLayout dstImageLayout,std::vector<VkImageCopy> regions){
-        vkCmdCopyImage(commandBuffer,srcImage,srcImageLayout,dstImage,dstImageLayout,regionCount,regions);
+        
       }
       
       void cmdReserveSpaceForCommandsNVX(const VkCmdReserveSpaceForCommandsInfoNVX* reserveSpaceInfo){
-        vkCmdReserveSpaceForCommandsNVX(commandBuffer,reserveSpaceInfo);
+        
       }
       
       void cmdBlitImage(Image srcImage,VkImageLayout srcImageLayout,Image dstImage,VkImageLayout dstImageLayout,std::vector<VkImageBlit> regions,VkFilter filter){
-        vkCmdBlitImage(commandBuffer,srcImage,srcImageLayout,dstImage,dstImageLayout,regionCount,regions,filter);
+        
       }
       
       void cmdSetStencilWriteMask(VkStencilFaceFlags faceMask,uint32_t writeMask){
-        vkCmdSetStencilWriteMask(commandBuffer,faceMask,writeMask);
+        
       }
       
       void cmdExecuteCommands(std::vector<CommandBuffer> commandBuffers){
-        vkCmdExecuteCommands(commandBuffer,commandBufferCount,commandBuffers);
+        
       }
       
       void cmdPushDescriptorSetWithTemplateKHR(DescriptorUpdateTemplateKHR descriptorUpdateTemplate,PipelineLayout layout,uint32_t set,const void* data){
-        vkCmdPushDescriptorSetWithTemplateKHR(commandBuffer,descriptorUpdateTemplate,layout,set,data);
+        
       }
       
       void cmdPipelineBarrier(VkPipelineStageFlags srcStageMask,VkPipelineStageFlags dstStageMask,VkDependencyFlags dependencyFlags,std::vector<VkMemoryBarrier> memoryBarriers,std::vector<VkBufferMemoryBarrier> bufferMemoryBarriers,std::vector<VkImageMemoryBarrier> imageMemoryBarriers){
-        vkCmdPipelineBarrier(commandBuffer,srcStageMask,dstStageMask,dependencyFlags,memoryBarrierCount,memoryBarriers,bufferMemoryBarrierCount,bufferMemoryBarriers,imageMemoryBarrierCount,imageMemoryBarriers);
+        
       }
       
       void cmdWaitEvents(std::vector<Event> events,VkPipelineStageFlags srcStageMask,VkPipelineStageFlags dstStageMask,std::vector<VkMemoryBarrier> memoryBarriers,std::vector<VkBufferMemoryBarrier> bufferMemoryBarriers,std::vector<VkImageMemoryBarrier> imageMemoryBarriers){
-        vkCmdWaitEvents(commandBuffer,eventCount,events,srcStageMask,dstStageMask,memoryBarrierCount,memoryBarriers,bufferMemoryBarrierCount,bufferMemoryBarriers,imageMemoryBarrierCount,imageMemoryBarriers);
+        
       }
       
       void cmdDrawIndexedIndirectCountAMD(Buffer buffer,std::size_t offset,Buffer countBuffer,std::size_t countBufferOffset,uint32_t maxDrawCount,uint32_t stride){
-        vkCmdDrawIndexedIndirectCountAMD(commandBuffer,buffer,offset,countBuffer,countBufferOffset,maxDrawCount,stride);
+        
       }
       
       void cmdDraw(uint32_t vertexCount,uint32_t instanceCount,uint32_t firstVertex,uint32_t firstInstance){
-        vkCmdDraw(commandBuffer,vertexCount,instanceCount,firstVertex,firstInstance);
+        
       }
       
       void cmdDrawIndexedIndirect(Buffer buffer,std::size_t offset,uint32_t drawCount,uint32_t stride){
-        vkCmdDrawIndexedIndirect(commandBuffer,buffer,offset,drawCount,stride);
+        
       }
       
       void cmdCopyImageToBuffer(Image srcImage,VkImageLayout srcImageLayout,Buffer dstBuffer,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyImageToBuffer(commandBuffer,srcImage,srcImageLayout,dstBuffer,regionCount,regions);
+        
       }
       
       void cmdDebugMarkerInsertEXT(const VkDebugMarkerMarkerInfoEXT* markerInfo){
-        vkCmdDebugMarkerInsertEXT(commandBuffer,markerInfo);
+        
       }
       
       void cmdSetStencilCompareMask(VkStencilFaceFlags faceMask,uint32_t compareMask){
-        vkCmdSetStencilCompareMask(commandBuffer,faceMask,compareMask);
+        
       }
       
       void cmdPushConstants(PipelineLayout layout,VkShaderStageFlags stageFlags,uint32_t offset,std::vector<void> values){
-        vkCmdPushConstants(commandBuffer,layout,stageFlags,offset,size,values);
+        
       }
       
       void cmdDrawIndirectCountAMD(Buffer buffer,std::size_t offset,Buffer countBuffer,std::size_t countBufferOffset,uint32_t maxDrawCount,uint32_t stride){
-        vkCmdDrawIndirectCountAMD(commandBuffer,buffer,offset,countBuffer,countBufferOffset,maxDrawCount,stride);
+        
       }
       
       void cmdDispatchIndirect(Buffer buffer,std::size_t offset){
-        vkCmdDispatchIndirect(commandBuffer,buffer,offset);
+        
       }
       
       void cmdCopyBufferToImage(Buffer srcBuffer,Image dstImage,VkImageLayout dstImageLayout,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyBufferToImage(commandBuffer,srcBuffer,dstImage,dstImageLayout,regionCount,regions);
+        
       }
       
       void cmdBindPipeline(VkPipelineBindPoint pipelineBindPoint,Pipeline pipeline){
-        vkCmdBindPipeline(commandBuffer,pipelineBindPoint,pipeline);
+        
       }
       
       void cmdDebugMarkerBeginEXT(const VkDebugMarkerMarkerInfoEXT* markerInfo){
-        vkCmdDebugMarkerBeginEXT(commandBuffer,markerInfo);
+        
       }
       
       VkResult endCommandBuffer(){
-        vkEndCommandBuffer(commandBuffer);
+        
       }
       
       VkResult resetCommandBuffer(VkCommandBufferResetFlags flags){
-        vkResetCommandBuffer(commandBuffer,flags);
+        
       }
       
       void cmdSetStencilReference(VkStencilFaceFlags faceMask,uint32_t reference){
-        vkCmdSetStencilReference(commandBuffer,faceMask,reference);
+        
       }
       
       void cmdEndQuery(QueryPool queryPool,uint32_t query){
-        vkCmdEndQuery(commandBuffer,queryPool,query);
+        
       }
       
       void cmdBindIndexBuffer(Buffer buffer,std::size_t offset,VkIndexType indexType){
-        vkCmdBindIndexBuffer(commandBuffer,buffer,offset,indexType);
+        
       }
       
       void cmdSetDeviceMaskKHX(uint32_t deviceMask){
-        vkCmdSetDeviceMaskKHX(commandBuffer,deviceMask);
+        
       }
       
       void cmdSetDepthBias(float depthBiasConstantFactor,float depthBiasClamp,float depthBiasSlopeFactor){
-        vkCmdSetDepthBias(commandBuffer,depthBiasConstantFactor,depthBiasClamp,depthBiasSlopeFactor);
+        
       }
       
       void cmdSetDepthBounds(float minDepthBounds,float maxDepthBounds){
-        vkCmdSetDepthBounds(commandBuffer,minDepthBounds,maxDepthBounds);
+        
       }
       
       void cmdClearDepthStencilImage(Image image,VkImageLayout imageLayout,const VkClearDepthStencilValue* depthStencil,std::vector<VkImageSubresourceRange> ranges){
-        vkCmdClearDepthStencilImage(commandBuffer,image,imageLayout,depthStencil,rangeCount,ranges);
+        
       }
       
       void cmdClearColorImage(Image image,VkImageLayout imageLayout,const VkClearColorValue* color,std::vector<VkImageSubresourceRange> ranges){
-        vkCmdClearColorImage(commandBuffer,image,imageLayout,color,rangeCount,ranges);
+        
       }
       
       void cmdBeginRenderPass(const VkRenderPassBeginInfo* renderPassBegin,VkSubpassContents contents){
-        vkCmdBeginRenderPass(commandBuffer,renderPassBegin,contents);
+        
       }
       
       void cmdCopyBuffer(Buffer srcBuffer,Buffer dstBuffer,std::vector<VkBufferCopy> regions){
-        vkCmdCopyBuffer(commandBuffer,srcBuffer,dstBuffer,regionCount,regions);
+        
       }
       
       void cmdSetBlendConstants(const float blendConstants){
-        vkCmdSetBlendConstants(commandBuffer,blendConstants);
+        
       }
       
       void cmdFillBuffer(Buffer dstBuffer,std::size_t dstOffset,std::size_t size,uint32_t data){
-        vkCmdFillBuffer(commandBuffer,dstBuffer,dstOffset,size,data);
+        
       }
       
       void cmdBeginQuery(QueryPool queryPool,uint32_t query,VkQueryControlFlags flags){
-        vkCmdBeginQuery(commandBuffer,queryPool,query,flags);
+        
       }
       
       void cmdBindDescriptorSets(VkPipelineBindPoint pipelineBindPoint,PipelineLayout layout,uint32_t firstSet,std::vector<DescriptorSet> descriptorSets,std::vector<uint32_t> dynamicOffsets){
-        vkCmdBindDescriptorSets(commandBuffer,pipelineBindPoint,layout,firstSet,descriptorSetCount,descriptorSets,dynamicOffsetCount,dynamicOffsets);
+        
       }
       
       void cmdClearAttachments(std::vector<VkClearAttachment> attachments,std::vector<VkClearRect> rects){
-        vkCmdClearAttachments(commandBuffer,attachmentCount,attachments,rectCount,rects);
+        
       }
     private:
       VkCommandBuffer commandBuffer;
@@ -1237,31 +1436,42 @@ namespace vk{
           surfaceKHR(surfaceKHR_){
       }
       
-      VkResult getSwapchainImagesKHR(Device device,std::vector<Image> swapchainImages){
-        vkGetSwapchainImagesKHR(device,swapchainKHR,swapchainImageCount,swapchainImages);
+      std::vector<Image> getSwapchainImagesKHR(Device device){
+        uint32_t* swapchainImageCount;
+        vkGetSwapchainImagesKHR(device,swapchainKHR,swapchainImageCount,null);
+        
+        std::vector<Image> swapchainImages(swapchainImageCount);
+        vkGetSwapchainImagesKHR(device,swapchainKHR,swapchainImageCount,swapchainImages.data());
       }
       
-      VkResult getRefreshCycleDurationGOOGLE(Device device,VkRefreshCycleDurationGOOGLE* displayTimingProperties){
+      VkRefreshCycleDurationGOOGLE* getRefreshCycleDurationGOOGLE(Device device){
+        VkRefreshCycleDurationGOOGLE* displayTimingProperties;
         vkGetRefreshCycleDurationGOOGLE(device,swapchainKHR,displayTimingProperties);
       }
       
       VkResult getSwapchainStatusKHR(Device device){
-        vkGetSwapchainStatusKHR(device,swapchainKHR);
+        
       }
       
-      VkResult acquireNextImageKHR(Device device,uint64_t timeout,Semaphore semaphore,Fence fence,uint32_t* imageIndex){
+      uint32_t* acquireNextImageKHR(Device device,uint64_t timeout,Semaphore semaphore,Fence fence){
+        uint32_t* imageIndex;
         vkAcquireNextImageKHR(device,swapchainKHR,timeout,semaphore,fence,imageIndex);
       }
       
-      VkResult getPastPresentationTimingGOOGLE(Device device,std::vector<VkPastPresentationTimingGOOGLE> presentationTimings){
-        vkGetPastPresentationTimingGOOGLE(device,swapchainKHR,presentationTimingCount,presentationTimings);
+      std::vector<VkPastPresentationTimingGOOGLE> getPastPresentationTimingGOOGLE(Device device){
+        uint32_t* presentationTimingCount;
+        vkGetPastPresentationTimingGOOGLE(device,swapchainKHR,presentationTimingCount,null);
+        
+        std::vector<VkPastPresentationTimingGOOGLE> presentationTimings(presentationTimingCount);
+        vkGetPastPresentationTimingGOOGLE(device,swapchainKHR,presentationTimingCount,presentationTimings.data());
       }
       
       void destroySwapchainKHR(Device device,const VkAllocationCallbacks* allocator){
-        vkDestroySwapchainKHR(device,swapchainKHR,allocator);
+        
       }
       
-      VkResult getSwapchainCounterEXT(Device device,VkSurfaceCounterFlagBitsEXT counter,uint64_t* counterValue){
+      uint64_t* getSwapchainCounterEXT(Device device,VkSurfaceCounterFlagBitsEXT counter){
+        uint64_t* counterValue;
         vkGetSwapchainCounterEXT(device,swapchainKHR,counter,counterValue);
       }
     private:
@@ -1277,7 +1487,7 @@ namespace vk{
       }
       
       void destroyDebugReportCallbackEXT(const VkAllocationCallbacks* allocator){
-        vkDestroyDebugReportCallbackEXT((VkInstance)instance,debugReportCallbackEXT,allocator);
+        
       }
     private:
       VkDebugReportCallbackEXT debugReportCallbackEXT;
@@ -1292,11 +1502,11 @@ namespace vk{
       }
       
       void cmdBindPipeline(CommandBuffer commandBuffer,VkPipelineBindPoint pipelineBindPoint){
-        vkCmdBindPipeline(commandBuffer,pipelineBindPoint,pipeline);
+        
       }
       
       void destroyPipeline(const VkAllocationCallbacks* allocator){
-        vkDestroyPipeline((VkDevice)device,pipeline,allocator);
+        
       }
     private:
       VkPipeline pipeline;
@@ -1310,24 +1520,36 @@ namespace vk{
           device(device_){
       }
       
-      VkResult createComputePipelines(std::vector<VkComputePipelineCreateInfo> createInfos,const VkAllocationCallbacks* allocator,std::vector<Pipeline> pipelines){
-        vkCreateComputePipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos,allocator,pipelines);
+      std::vector<Pipeline> createComputePipelines(std::vector<VkComputePipelineCreateInfo> createInfos,const VkAllocationCallbacks* allocator){
+        uint32_t createInfoCount;
+        vkCreateComputePipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos.data(),allocator,null);
+        
+        std::vector<Pipeline> pipelines(createInfoCount);
+        vkCreateComputePipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos.data(),allocator,pipelines.data());
       }
       
-      VkResult createGraphicsPipelines(std::vector<VkGraphicsPipelineCreateInfo> createInfos,const VkAllocationCallbacks* allocator,std::vector<Pipeline> pipelines){
-        vkCreateGraphicsPipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos,allocator,pipelines);
+      std::vector<Pipeline> createGraphicsPipelines(std::vector<VkGraphicsPipelineCreateInfo> createInfos,const VkAllocationCallbacks* allocator){
+        uint32_t createInfoCount;
+        vkCreateGraphicsPipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos.data(),allocator,null);
+        
+        std::vector<Pipeline> pipelines(createInfoCount);
+        vkCreateGraphicsPipelines((VkDevice)device,pipelineCache,createInfoCount,createInfos.data(),allocator,pipelines.data());
       }
       
       void destroyPipelineCache(const VkAllocationCallbacks* allocator){
-        vkDestroyPipelineCache((VkDevice)device,pipelineCache,allocator);
+        
       }
       
       VkResult mergePipelineCaches(std::vector<PipelineCache> srcCaches){
-        vkMergePipelineCaches((VkDevice)device,pipelineCache,srcCacheCount,srcCaches);
+        
       }
       
-      VkResult getPipelineCacheData(std::vector<void> data){
-        vkGetPipelineCacheData((VkDevice)device,pipelineCache,dataSize,data);
+      std::vector<void> getPipelineCacheData(){
+        size_t* dataSize;
+        vkGetPipelineCacheData((VkDevice)device,pipelineCache,dataSize,null);
+        
+        std::vector<void> data(dataSize);
+        vkGetPipelineCacheData((VkDevice)device,pipelineCache,dataSize,data.data());
       }
     private:
       VkPipelineCache pipelineCache;
@@ -1342,30 +1564,33 @@ namespace vk{
       }
       
       VkResult bindBufferMemory(Buffer buffer,std::size_t memoryOffset){
-        vkBindBufferMemory((VkDevice)device,buffer,deviceMemory,memoryOffset);
+        
       }
       
       void freeMemory(const VkAllocationCallbacks* allocator){
-        vkFreeMemory((VkDevice)device,deviceMemory,allocator);
+        
       }
       
-      VkResult mapMemory(std::size_t offset,std::size_t size,VkMemoryMapFlags flags,void** data){
+      void** mapMemory(std::size_t offset,std::size_t size,VkMemoryMapFlags flags){
+        void** data;
         vkMapMemory((VkDevice)device,deviceMemory,offset,size,flags,data);
       }
       
       void unmapMemory(){
-        vkUnmapMemory((VkDevice)device,deviceMemory);
+        
       }
       
-      VkResult getMemoryWin32HandleNV(VkExternalMemoryHandleTypeFlagsNV handleType,HANDLE* handle){
+      HANDLE* getMemoryWin32HandleNV(VkExternalMemoryHandleTypeFlagsNV handleType){
+        HANDLE* handle;
         vkGetMemoryWin32HandleNV((VkDevice)device,deviceMemory,handleType,handle);
       }
       
       VkResult bindImageMemory(Image image,std::size_t memoryOffset){
-        vkBindImageMemory((VkDevice)device,image,deviceMemory,memoryOffset);
+        
       }
       
-      void getDeviceMemoryCommitment(std::size_t* committedMemoryInBytes){
+      std::size_t* getDeviceMemoryCommitment(){
+        std::size_t* committedMemoryInBytes;
         vkGetDeviceMemoryCommitment((VkDevice)device,deviceMemory,committedMemoryInBytes);
       }
     private:
@@ -1381,51 +1606,52 @@ namespace vk{
       }
       
       void cmdUpdateBuffer(CommandBuffer commandBuffer,std::size_t dstOffset,std::vector<void> data){
-        vkCmdUpdateBuffer(commandBuffer,buffer,dstOffset,dataSize,data);
+        
       }
       
       VkResult bindBufferMemory(DeviceMemory memory,std::size_t memoryOffset){
-        vkBindBufferMemory((VkDevice)device,buffer,memory,memoryOffset);
+        
       }
       
       void cmdCopyQueryPoolResults(CommandBuffer commandBuffer,QueryPool queryPool,uint32_t firstQuery,uint32_t queryCount,std::size_t dstOffset,std::size_t stride,VkQueryResultFlags flags){
-        vkCmdCopyQueryPoolResults(commandBuffer,queryPool,firstQuery,queryCount,buffer,dstOffset,stride,flags);
+        
       }
       
       void cmdDrawIndirect(CommandBuffer commandBuffer,std::size_t offset,uint32_t drawCount,uint32_t stride){
-        vkCmdDrawIndirect(commandBuffer,buffer,offset,drawCount,stride);
+        
       }
       
       void cmdDrawIndexedIndirect(CommandBuffer commandBuffer,std::size_t offset,uint32_t drawCount,uint32_t stride){
-        vkCmdDrawIndexedIndirect(commandBuffer,buffer,offset,drawCount,stride);
+        
       }
       
       void cmdCopyImageToBuffer(CommandBuffer commandBuffer,Image srcImage,VkImageLayout srcImageLayout,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyImageToBuffer(commandBuffer,srcImage,srcImageLayout,buffer,regionCount,regions);
+        
       }
       
       void destroyBuffer(const VkAllocationCallbacks* allocator){
-        vkDestroyBuffer((VkDevice)device,buffer,allocator);
+        
       }
       
       void cmdDispatchIndirect(CommandBuffer commandBuffer,std::size_t offset){
-        vkCmdDispatchIndirect(commandBuffer,buffer,offset);
+        
       }
       
       void cmdCopyBufferToImage(CommandBuffer commandBuffer,Image dstImage,VkImageLayout dstImageLayout,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyBufferToImage(commandBuffer,buffer,dstImage,dstImageLayout,regionCount,regions);
+        
       }
       
-      void getBufferMemoryRequirements(VkMemoryRequirements* memoryRequirements){
+      VkMemoryRequirements* getBufferMemoryRequirements(){
+        VkMemoryRequirements* memoryRequirements;
         vkGetBufferMemoryRequirements((VkDevice)device,buffer,memoryRequirements);
       }
       
       void cmdBindIndexBuffer(CommandBuffer commandBuffer,std::size_t offset,VkIndexType indexType){
-        vkCmdBindIndexBuffer(commandBuffer,buffer,offset,indexType);
+        
       }
       
       void cmdFillBuffer(CommandBuffer commandBuffer,std::size_t dstOffset,std::size_t size,uint32_t data){
-        vkCmdFillBuffer(commandBuffer,buffer,dstOffset,size,data);
+        
       }
     private:
       VkBuffer buffer;
@@ -1440,7 +1666,7 @@ namespace vk{
       }
       
       void destroyFramebuffer(const VkAllocationCallbacks* allocator){
-        vkDestroyFramebuffer((VkDevice)device,framebuffer,allocator);
+        
       }
     private:
       VkFramebuffer framebuffer;
@@ -1455,15 +1681,15 @@ namespace vk{
       }
       
       void destroyObjectTableNVX(const VkAllocationCallbacks* allocator){
-        vkDestroyObjectTableNVX((VkDevice)device,objectTableNVX,allocator);
+        
       }
       
       VkResult unregisterObjectsNVX(std::vector<VkObjectEntryTypeNVX> objectEntryTypes,std::vector<uint32_t> objectIndices){
-        vkUnregisterObjectsNVX((VkDevice)device,objectTableNVX,objectCount,objectEntryTypes,objectIndices);
+        
       }
       
       VkResult registerObjectsNVX(std::vector<VkObjectTableEntryNVX> objectTableEntries,std::vector<uint32_t> objectIndices){
-        vkRegisterObjectsNVX((VkDevice)device,objectTableNVX,objectCount,objectTableEntries,objectIndices);
+        
       }
     private:
       VkObjectTableNVX objectTableNVX;
@@ -1478,7 +1704,7 @@ namespace vk{
       }
       
       void destroyShaderModule(const VkAllocationCallbacks* allocator){
-        vkDestroyShaderModule((VkDevice)device,shaderModule,allocator);
+        
       }
     private:
       VkShaderModule shaderModule;
@@ -1493,23 +1719,24 @@ namespace vk{
       }
       
       VkResult queueSubmit(Queue queue,std::vector<VkSubmitInfo> submits){
-        vkQueueSubmit(queue,submitCount,submits,fence);
+        
       }
       
       void destroyFence(const VkAllocationCallbacks* allocator){
-        vkDestroyFence((VkDevice)device,fence,allocator);
+        
       }
       
-      VkResult acquireNextImageKHR(SwapchainKHR swapchain,uint64_t timeout,Semaphore semaphore,uint32_t* imageIndex){
+      uint32_t* acquireNextImageKHR(SwapchainKHR swapchain,uint64_t timeout,Semaphore semaphore){
+        uint32_t* imageIndex;
         vkAcquireNextImageKHR((VkDevice)device,swapchain,timeout,semaphore,fence,imageIndex);
       }
       
       VkResult queueBindSparse(Queue queue,std::vector<VkBindSparseInfo> bindInfo){
-        vkQueueBindSparse(queue,bindInfoCount,bindInfo,fence);
+        
       }
       
       VkResult getFenceStatus(){
-        vkGetFenceStatus((VkDevice)device,fence);
+        
       }
     private:
       VkFence fence;
@@ -1524,31 +1751,35 @@ namespace vk{
       }
       
       void cmdCopyQueryPoolResults(CommandBuffer commandBuffer,uint32_t firstQuery,uint32_t queryCount,Buffer dstBuffer,std::size_t dstOffset,std::size_t stride,VkQueryResultFlags flags){
-        vkCmdCopyQueryPoolResults(commandBuffer,queryPool,firstQuery,queryCount,dstBuffer,dstOffset,stride,flags);
+        
       }
       
       void cmdWriteTimestamp(CommandBuffer commandBuffer,VkPipelineStageFlagBits pipelineStage,uint32_t query){
-        vkCmdWriteTimestamp(commandBuffer,pipelineStage,queryPool,query);
+        
       }
       
       void cmdResetQueryPool(CommandBuffer commandBuffer,uint32_t firstQuery,uint32_t queryCount){
-        vkCmdResetQueryPool(commandBuffer,queryPool,firstQuery,queryCount);
+        
       }
       
       void destroyQueryPool(const VkAllocationCallbacks* allocator){
-        vkDestroyQueryPool((VkDevice)device,queryPool,allocator);
+        
       }
       
       void cmdEndQuery(CommandBuffer commandBuffer,uint32_t query){
-        vkCmdEndQuery(commandBuffer,queryPool,query);
+        
       }
       
-      VkResult getQueryPoolResults(uint32_t firstQuery,uint32_t queryCount,std::vector<void> data,std::size_t stride,VkQueryResultFlags flags){
-        vkGetQueryPoolResults((VkDevice)device,queryPool,firstQuery,queryCount,dataSize,data,stride,flags);
+      std::vector<void> getQueryPoolResults(uint32_t firstQuery,uint32_t queryCount,std::size_t stride,VkQueryResultFlags flags){
+        size_t dataSize;
+        vkGetQueryPoolResults((VkDevice)device,queryPool,firstQuery,queryCount,dataSize,null,stride,flags);
+        
+        std::vector<void> data(dataSize);
+        vkGetQueryPoolResults((VkDevice)device,queryPool,firstQuery,queryCount,dataSize,data.data(),stride,flags);
       }
       
       void cmdBeginQuery(CommandBuffer commandBuffer,uint32_t query,VkQueryControlFlags flags){
-        vkCmdBeginQuery(commandBuffer,queryPool,query,flags);
+        
       }
     private:
       VkQueryPool queryPool;
@@ -1562,39 +1793,45 @@ namespace vk{
           device(device_){
       }
       
-      void getImageSubresourceLayout(const VkImageSubresource* subresource,VkSubresourceLayout* layout){
+      VkSubresourceLayout* getImageSubresourceLayout(const VkImageSubresource* subresource){
+        VkSubresourceLayout* layout;
         vkGetImageSubresourceLayout((VkDevice)device,image,subresource,layout);
       }
       
       void cmdCopyImageToBuffer(CommandBuffer commandBuffer,VkImageLayout srcImageLayout,Buffer dstBuffer,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyImageToBuffer(commandBuffer,image,srcImageLayout,dstBuffer,regionCount,regions);
+        
       }
       
       void destroyImage(const VkAllocationCallbacks* allocator){
-        vkDestroyImage((VkDevice)device,image,allocator);
+        
       }
       
       VkResult bindImageMemory(DeviceMemory memory,std::size_t memoryOffset){
-        vkBindImageMemory((VkDevice)device,image,memory,memoryOffset);
+        
       }
       
       void cmdCopyBufferToImage(CommandBuffer commandBuffer,Buffer srcBuffer,VkImageLayout dstImageLayout,std::vector<VkBufferImageCopy> regions){
-        vkCmdCopyBufferToImage(commandBuffer,srcBuffer,image,dstImageLayout,regionCount,regions);
+        
       }
       
-      void getImageSparseMemoryRequirements(std::vector<VkSparseImageMemoryRequirements> sparseMemoryRequirements){
-        vkGetImageSparseMemoryRequirements((VkDevice)device,image,sparseMemoryRequirementCount,sparseMemoryRequirements);
+      std::vector<VkSparseImageMemoryRequirements> getImageSparseMemoryRequirements(){
+        uint32_t* sparseMemoryRequirementCount;
+        vkGetImageSparseMemoryRequirements((VkDevice)device,image,sparseMemoryRequirementCount,null);
+        
+        std::vector<VkSparseImageMemoryRequirements> sparseMemoryRequirements(sparseMemoryRequirementCount);
+        vkGetImageSparseMemoryRequirements((VkDevice)device,image,sparseMemoryRequirementCount,sparseMemoryRequirements.data());
       }
       
       void cmdClearDepthStencilImage(CommandBuffer commandBuffer,VkImageLayout imageLayout,const VkClearDepthStencilValue* depthStencil,std::vector<VkImageSubresourceRange> ranges){
-        vkCmdClearDepthStencilImage(commandBuffer,image,imageLayout,depthStencil,rangeCount,ranges);
+        
       }
       
       void cmdClearColorImage(CommandBuffer commandBuffer,VkImageLayout imageLayout,const VkClearColorValue* color,std::vector<VkImageSubresourceRange> ranges){
-        vkCmdClearColorImage(commandBuffer,image,imageLayout,color,rangeCount,ranges);
+        
       }
       
-      void getImageMemoryRequirements(VkMemoryRequirements* memoryRequirements){
+      VkMemoryRequirements* getImageMemoryRequirements(){
+        VkMemoryRequirements* memoryRequirements;
         vkGetImageMemoryRequirements((VkDevice)device,image,memoryRequirements);
       }
     private:
