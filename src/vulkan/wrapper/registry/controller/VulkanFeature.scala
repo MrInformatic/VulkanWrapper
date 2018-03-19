@@ -1,7 +1,6 @@
 package vulkan.wrapper.registry.controller
 
 import vulkan.wrapper.registry._
-import vulkan.wrapper.registry.controller.controll.{VulkanControllRemove, VulkanControllRequire}
 
 import scala.xml.Node
 

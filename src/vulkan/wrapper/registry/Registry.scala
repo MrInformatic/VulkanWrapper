@@ -1,13 +1,13 @@
 package vulkan.wrapper.registry
 
-import scala.xml.XML
-import vulkan._
 import vulkan.wrapper.registry.command.VulkanCommand
 import vulkan.wrapper.registry.controller.{VulkanExtension, VulkanFeature}
 import vulkan.wrapper.registry.tag.VulkanTag
 import vulkan.wrapper.registry.vendorid.VulkanVendorId
 import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum}
 import vulkan.wrapper.registry.vtype._
+
+import scala.xml.XML
 
 class Registry {
   val xml = XML.loadFile("vk.xml")

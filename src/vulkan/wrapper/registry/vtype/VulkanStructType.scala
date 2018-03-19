@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.vtype
 
-import vulkan.wrapper.registry.{Registry, _}
+import vulkan.wrapper.registry.Registry
 
 import scala.xml.Node
 
