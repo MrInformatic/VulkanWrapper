@@ -185,12 +185,8 @@ class VulkanXmlWrapper(input:Document) {
     var commandConfigurations: Array[CommandConfiguration] = Array()
     var opperation = improvedName.takeWhile(_.isLower)
 
-    var improvedReturnType = returnType;
-
     def update1(): Unit ={
       parameters.foreach(_.update1())
-
-      parameters.reverse.find(_.orginReturnParam).foreach(p => improvedReturnType = p.improvedType)
 
       val improvedHandles = parameters
         .filter(p => handles.contains(p.valueType))
@@ -216,7 +212,7 @@ class VulkanXmlWrapper(input:Document) {
     var improvedPureType = "";
     var lenParams:mutable.ListBuffer[Param] = mutable.ListBuffer()
     if (handles.contains(pureType)) {
-      improvedType = valueType.replace(pureType, handles(pureType).improvedName)
+      improvedType = handles(pureType).improvedName
       improvedPureType = handles(pureType).improvedName
       //println(pureType,improvedType)
     }else if (basetypes.contains(pureType)) {
@@ -237,8 +233,6 @@ class VulkanXmlWrapper(input:Document) {
 
     var returnParam = !valueType.startsWith("const") && !valueType.startsWith("struct") && valueType.endsWith("*")
     var orginReturnParam = returnParam;
-    if(returnParam)
-      writeParam = false
 
     def update1(): Unit ={
       if(len.nonEmpty){
@@ -345,7 +339,7 @@ class VulkanXmlWrapper(input:Document) {
         s"${handle.varName}(${handle.varName}_)"
       }
 
-      def writeCommand(commandConfiguration: CommandConfiguration): String ={
+      /*def writeCommand(commandConfiguration: CommandConfiguration): String ={
         def writeParameter(paramConfiguration: ParamConfiguration): String ={
           s"${paramConfiguration.param.improvedType} ${paramConfiguration.param.improvedName}"
         }
@@ -383,6 +377,29 @@ class VulkanXmlWrapper(input:Document) {
         s"${commandConfiguration.command.improvedReturnType} ${commandConfiguration.command.improvedName}(${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).map(writeParameter(_)).mkString(",")}){\n" +
           s"  ${if(returns.isEmpty) if(commandConfiguration.command.improvedReturnType=="void") writeCommandReturn(Array(),0) else "return "+writeCommandReturn(Array(),0) else indentation((0 until returns.length).map(writeCommandReturn(returns,_)).mkString("\n\n"),"  ")}\n" +
           s"${commandConfiguration.parameters.reverse.find(_.param.returnParam).map(p => "  \n  return "+p.param.improvedName+";\n").getOrElse("")}" +
+          s"}"
+      }*/
+
+      def writeCommand(commandConfiguration: CommandConfiguration): String ={
+        def writeCommandReturnType(commandConfiguration: CommandConfiguration): String ={
+          val returns = commandConfiguration.parameters.filter(_.param.returnParam).filterNot(_.isHandle).filter(_.param.writeParam).map(_.param.improvedType) ++ Option(commandConfiguration.command.returnType).filterNot(_=="void")
+          returns.length match {
+            case 0 => s"void"
+            case 1 => s"${returns.head}"
+            case x => s"std::tuple<${returns.mkString(",")}>"
+          }
+        }
+
+        def writeCommandParameters(commandConfiguration: CommandConfiguration):String ={
+          def writeCommandParameter(paramConfiguration: ParamConfiguration): String ={
+            s"${paramConfiguration.param.improvedType} ${paramConfiguration.param.improvedName}"
+          }
+
+          s"${commandConfiguration.parameters.filterNot(_.isHandle).filter(_.param.writeParam).filterNot(_.param.returnParam).map(writeCommandParameter(_)).mkString(",")}"
+        }
+
+        s"${writeCommandReturnType(commandConfiguration)} ${commandConfiguration.command.improvedName}(${writeCommandParameters(commandConfiguration)}){\n" +
+          s"  \n" +
           s"}"
       }
 
