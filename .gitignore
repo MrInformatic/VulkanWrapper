@@ -4,3 +4,4 @@
 *.directory
 *.iml
 old/
+res/*
