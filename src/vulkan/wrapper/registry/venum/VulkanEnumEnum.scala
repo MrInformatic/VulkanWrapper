@@ -9,5 +9,4 @@ abstract class VulkanEnumEnum(registry: Registry, val vulkanEnum: VulkanEnum, va
 
   val name: String = node \@ "name"
   val api: Option[String] = node \@@ "api"
-  val alias: Option[String] = node \@@ "alias"
 }
