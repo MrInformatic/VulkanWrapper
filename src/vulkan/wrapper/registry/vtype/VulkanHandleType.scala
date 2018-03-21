@@ -5,7 +5,7 @@ import vulkan.wrapper.registry.{Registry, _}
 import scala.xml.Node
 
 class VulkanHandleType(registry: Registry,node: Node) extends VulkanOtherType(registry,node){
-  def parent: Option[String] = node \@@ "parent"
+  def parent: Option[VulkanOtherType] = (node \@@ "parent").flatMap(registry.handleTypes.get)
 }
 
 object VulkanHandleType {
