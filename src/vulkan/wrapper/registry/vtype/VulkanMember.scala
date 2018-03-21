@@ -1,20 +1,28 @@
 package vulkan.wrapper.registry.vtype
 
+import vulkan.wrapper.registry.venum.VulkanEnumEnum
 import vulkan.wrapper.registry.{Registry, _}
 
 import scala.xml.Node
 
 class VulkanMember(registry: Registry, val vulkanMemberType: VulkanMemberType, val node: Node) extends RegistryType(registry){
-  val values: Option[String] = node \@@ "values"
-  val len: Option[String] = node \@@ "len"
-  val altlen: Option[String] = node \@@ "altlen"
-  val externsync: Option[String] = node \@@ "externsync"
-  val optional: Option[String] = node \@@ "optional"
-  val noautovalidity: Option[String] = node \@@ "noautovalidity"
-  val typeName: Option[String] = node \@\ "type"
+  val values: Traversable[String] = (node \@@ "values").seq.flatMap(_.split(",").seq)
+  val len: Traversable[String] = (node \@@ "len").seq.flatMap(_.split(",").seq)
+  val altlen: Traversable[String] = (node \@@ "altlen").seq.flatMap(_.split(",").seq)
+  val clen: Traversable[String] = genClen()
+  val externsync: Boolean = (node \@@ "externsync").exists(_.toBoolean)
+  val optional: Boolean = (node \@@ "optional").exists(_.toBoolean)
+  val noautovalidity: Boolean = (node \@@ "noautovalidity").exists(_.toBoolean)
+  val typeName: Option[VulkanType] = (node \@\ "type").flatMap(registry.types.get)
   val name: String = node @\\ "name"
-  val enum: Option[String] = node \@\ "enum"
+  val enum: Option[VulkanEnumEnum] = (node \@\ "enum").flatMap(registry.enumValues.get)
   val comment: Option[String] = node \@\ "comment"
+
+  private def genClen(_len: Traversable[String] = len,_altlen: Traversable[String] = altlen): Traversable[String] =
+    if(len.nonEmpty)
+      Traversable(if (_len.head.startsWith("latexmath:")) _altlen.head else _len.head) ++ genClen(_len.tail, if (_len.head.startsWith("latexmath:")) _altlen.tail else _altlen)
+    else
+      Traversable()
 }
 
 object VulkanMember {

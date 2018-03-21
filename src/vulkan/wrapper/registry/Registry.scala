@@ -43,6 +43,7 @@ class Registry {
 
   val enums: Traversable[VulkanEnum] = VulkanEnum(this)
   val mapedEnums: Map[String,VulkanEnum] = enums.filter(_.name.nonEmpty).map(i => (i.name.get,i)).toMap
+  val enumValues: Map[String,VulkanEnumEnum] = enums.flatMap(_.enums.map(i => (i.name,i))).toMap
 
   val commands: Map[String,VulkanCommand] = VulkanCommand(this)
 
