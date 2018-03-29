@@ -5,12 +5,15 @@ import vulkan.wrapper.registry.controller.VulkanController
 
 import scala.xml.Node
 
-class VulkanControllRequire(registry: Registry, vulkanController: VulkanController, node: Node) extends VulkanControll(registry,vulkanController,node) {
+class VulkanControllRequire[T <: VulkanController](registry: Registry, vulkanController: T, node: Node) extends VulkanControll[T](registry,vulkanController,node) {
+  override type This[X <: VulkanController] = VulkanControllRequire[X]
+  override def getThis: VulkanControllRequire[T] = this
+
   def extension: Option[String] = node \@@ "extension"
   def feature: Option[String] = node \@@ "feature"
 }
 
 object VulkanControllRequire {
-  def apply(registry: Registry,vulkanController: VulkanController,node: Node): Traversable[VulkanControllRequire] =
+  def apply[T <: VulkanController](registry: Registry,vulkanController: T,node: Node): Traversable[VulkanControllRequire[T]] =
     (node \ "require").map(new VulkanControllRequire(registry,vulkanController,_))
 }

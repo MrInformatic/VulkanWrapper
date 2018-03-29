@@ -11,8 +11,8 @@ class VulkanEnumBitpos(registry: Registry, vulkanEnum: VulkanEnum, node: Node) e
 }
 
 object VulkanEnumBitpos {
-  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Traversable[VulkanEnumBitpos] =
-    (node \ "enum").filter(_.attribute("bitpos").nonEmpty).map(new VulkanEnumBitpos(registry,vulkanEnum,_))
+  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Map[String,VulkanEnumBitpos] =
+    (node \ "enum").filter(_.attribute("bitpos").nonEmpty).map(new VulkanEnumBitpos(registry,vulkanEnum,_)).map(i => (i.name,i)).toMap
 }
 
 

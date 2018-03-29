@@ -5,9 +5,10 @@ import vulkan.wrapper.registry.{Registry, _}
 import scala.xml.Node
 
 class VulkanEnum(registry: Registry,val node: Node) extends RegistryType(registry){
-  val valueEnums: Traversable[VulkanEnumValue] = VulkanEnumValue(registry,this,node)
-  val bitposEnums: Traversable[VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
-  val enums: Traversable[VulkanEnumEnum] = valueEnums ++ bitposEnums
+  val valueEnums: Map[String,VulkanEnumValue] = VulkanEnumValue(registry,this,node)
+  val bitposEnums: Map[String,VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
+  val aliasEnums: Map[String,VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
+  val enums: Map[String,VulkanEnumEnum] = valueEnums ++ bitposEnums ++ aliasEnums
 
   val unused: Traversable[VulkanEnumUnused] = VulkanEnumUnused(registry,this,node)
   val name: Option[String] = node \@@ "name"

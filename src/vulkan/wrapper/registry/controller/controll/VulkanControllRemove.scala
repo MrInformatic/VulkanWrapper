@@ -5,11 +5,12 @@ import vulkan.wrapper.registry.controller.VulkanController
 
 import scala.xml.Node
 
-class VulkanControllRemove(registry: Registry, vulkanController: VulkanController, node: Node) extends VulkanControll(registry,vulkanController,node) {
-
+class VulkanControllRemove[T <: VulkanController](registry: Registry, vulkanController: T, node: Node) extends VulkanControll(registry,vulkanController,node) {
+  override type This[X <: VulkanController] = VulkanControllRemove[X]
+  override def getThis: VulkanControllRemove[T] = this
 }
 
 object VulkanControllRemove {
-  def apply(registry: Registry,vulkanController: VulkanController, node: Node) =
-    (node \ "remove").map(new VulkanControllRemove(registry,vulkanController,_))
+  def apply[T <: VulkanController](registry: Registry,vulkanController: T, node: Node):Traversable[VulkanControllRemove[T]] =
+    (node \ "remove").map(new VulkanControllRemove[T](registry,vulkanController,_))
 }

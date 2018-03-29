@@ -10,6 +10,6 @@ class VulkanEnumValue(registry: Registry, vulkanEnum: VulkanEnum, node: Node) ex
 }
 
 object VulkanEnumValue {
-  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Traversable[VulkanEnumValue] =
-    (node \ "enum").filter(_.attribute("value").nonEmpty).map(new VulkanEnumValue(registry,vulkanEnum,_))
+  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Map[String,VulkanEnumValue] =
+    (node \ "enum").filter(_.attribute("value").nonEmpty).map(new VulkanEnumValue(registry,vulkanEnum,_)).map(i => (i.name,i)).toMap
 }

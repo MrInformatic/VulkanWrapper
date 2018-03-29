@@ -5,11 +5,11 @@ import vulkan.wrapper.registry.Registry
 import scala.xml.Node
 
 class VulkanEnumAlias(registry: Registry, vulkanEnum: VulkanEnum, node: Node) extends VulkanEnumEnum(registry,vulkanEnum,node){
-  val alias: VulkanEnumEnum = vulkanEnum.enums(node \@ "alias")
-  override val value: String = alias.value
+  lazy val alias: VulkanEnumEnum = vulkanEnum.enums(node \@ "alias")
+  lazy val value: String = alias.value
 }
 
 object VulkanEnumAlias {
-  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Traversable[VulkanEnumAlias] =
-    (node \ "enum").filter(_.attribute("alias").nonEmpty).map(new VulkanEnumAlias(registry,vulkanEnum,_))
+  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Map[String,VulkanEnumAlias] =
+    (node \ "enum").filter(_.attribute("alias").nonEmpty).map(new VulkanEnumAlias(registry,vulkanEnum,_)).map(i => (i.name,i)).toMap
 }

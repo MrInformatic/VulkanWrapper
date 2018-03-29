@@ -7,7 +7,7 @@ import scala.xml.Node
 class VulkanEnumUnused(registry: Registry, val vulkanEnum: VulkanEnum, val node: Node) extends RegistryType(registry){
   val start: String = node \@ "start"
   val end: Option[String] = node \@@ "end"
-  val vendor: Option[String] = node \@@ " vendor"
+  val vendor: Option[String] = node \@@ "vendor"
   val comment: Option[String] = node \@@ "comment"
 }
 

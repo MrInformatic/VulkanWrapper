@@ -1,5 +1,7 @@
 package vulkan.wrapper.registry.command
 
+import vulkan.wrapper.registry.controller.VulkanFeature
+import vulkan.wrapper.registry.controller.controll.VulkanControllRequire
 import vulkan.wrapper.registry.venum.VulkanEnumEnum
 import vulkan.wrapper.registry.vtype.VulkanType
 import vulkan.wrapper.registry.{Registry, RegistryType, _}
@@ -8,13 +10,13 @@ import scala.xml.Node
 
 class VulkanCommand(registry: Registry, val node: Node) extends RegistryType(registry){
   val params: Traversable[VulkanCommandParam] = VulkanCommandParam(registry,this,node,false)
-  val implicitexternsyncparams: Traversable[VulkanCommandParam] = VulkanCommandParam(registry,this,(node \ "implicitexternsyncparams").head,true)
+  val implicitexternsyncparams: Traversable[VulkanCommandParam] = (node \ "implicitexternsyncparams").headOption.seq.flatMap(VulkanCommandParam(registry,this,_,true))
 
   val queues: Traversable[VulkanCommandQueues.VulkanCommandQueue] =
     (node \@@ "queues").seq.flatMap(_.split(",").seq.map(VulkanCommandQueues.withName))
 
-  lazy val successcodes: Traversable[VulkanEnumEnum] = (node \@@ "successcodes").flatMap(_.split(",").seq).flatMap(registry.successCodes.get)
-  lazy val errorcodes: Traversable[VulkanEnumEnum] = (node \@@ "errorcodes").flatMap(_.split(",").seq).flatMap(registry.errorCodes.get)
+  lazy val successcodes: Traversable[VulkanEnumEnum] = (node \@@ "successcodes").seq.flatMap(_.split(",").seq).flatMap(registry.successCodes.get)
+  lazy val errorcodes: Traversable[VulkanEnumEnum] = (node \@@ "errorcodes").seq.flatMap(_.split(",").seq).flatMap(registry.errorCodes.get)
 
   val renderpass: Option[VulkanCommandRenderPasses.VulkanCommandRenderPass] =
     (node \@@ "renderpass").map(VulkanCommandRenderPasses.withName)

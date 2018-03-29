@@ -1,7 +1,8 @@
 package vulkan.wrapper.registry
 
 import vulkan.wrapper.registry.command.VulkanCommand
-import vulkan.wrapper.registry.controller.{VulkanExtension, VulkanFeature}
+import vulkan.wrapper.registry.controller.controll.{VulkanControllRemove, VulkanControllRequire}
+import vulkan.wrapper.registry.controller.{VulkanController, VulkanExtension, VulkanFeature}
 import vulkan.wrapper.registry.tag.VulkanTag
 import vulkan.wrapper.registry.vendorid.VulkanVendorId
 import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum}
@@ -43,15 +44,51 @@ class Registry {
 
   val enums: Traversable[VulkanEnum] = VulkanEnum(this)
   val mapedEnums: Map[String,VulkanEnum] = enums.filter(_.name.nonEmpty).map(i => (i.name.get,i)).toMap
-  val enumValues: Map[String,VulkanEnumEnum] = enums.flatMap(_.enums.map(i => (i.name,i))).toMap
+  val enumValues: Map[String,VulkanEnumEnum] = enums.flatMap(_.enums.seq).toMap
 
   val commands: Map[String,VulkanCommand] = VulkanCommand(this)
 
   val features: Map[String,VulkanFeature] = VulkanFeature(this)
 
-  val extension: Map[String,VulkanExtension] = VulkanExtension(this)
+  val extensions: Map[String,VulkanExtension] = VulkanExtension(this)
 
-  val resultCodes: Map[String,VulkanEnumEnum] = mapedEnums("VkResult").enums.map(i => (i.name,i)).toMap
+  val featuresRequireingCommand: Map[VulkanCommand, Traversable[VulkanControllRequire[VulkanFeature]]] = features.values
+    .flatMap(_.requiresTags)
+    .flatMap(i => i.commands.map(n => (n.command,i)))
+    .groupBy(_._1)
+    .map(i => (i._1,i._2.map(_._2)))
+
+  val featuresRemoveingCommand: Map[VulkanCommand,Traversable[VulkanControllRemove[VulkanFeature]]] = features.values
+    .flatMap(_.removesTags)
+    .flatMap(i => i.commands.map(n => (i,n.command)))
+    .groupBy(_._2)
+    .map(i => (i._1,i._2.map(_._1)))
+
+  val featuresUseingCommand: Map[VulkanCommand,Traversable[VulkanFeature]] =
+    (featuresRequireingCommand ++ featuresRemoveingCommand).map(i => (i._1,i._2.map(_.vulkanController)))
+
+  val extensionsRequireingCommand: Map[VulkanCommand,Traversable[VulkanControllRequire[VulkanExtension]]] = extensions.values
+    .flatMap(_.requiresTags)
+    .flatMap(i => i.commands.map(n => (n.command,i)))
+    .groupBy(_._1)
+    .map(i => (i._1,i._2.map(_._2)))
+
+  val extensionsRemoveingCommand: Map[VulkanCommand,Traversable[VulkanControllRemove[VulkanExtension]]] = extensions.values
+    .flatMap(_.removesTags)
+    .flatMap(i => i.commands.map(n => (i,n.command)))
+    .groupBy(_._2)
+    .map(i => (i._1,i._2.map(_._1)))
+
+  val extensionsUseingCommand: Map[VulkanCommand,Traversable[VulkanExtension]] =
+    (extensionsRequireingCommand ++ extensionsRemoveingCommand).map(i => (i._1,i._2.map(_.vulkanController)))
+
+  val controllerRequireingCommand: Map[VulkanCommand,Traversable[VulkanControllRequire[_ <: VulkanController]]] =
+    featuresRequireingCommand ++ extensionsRequireingCommand
+
+  val controllerRemoveingCommand: Map[VulkanCommand,Traversable[VulkanControllRemove[_ <: VulkanController]]] =
+    featuresRemoveingCommand ++ extensionsRemoveingCommand
+
+  val resultCodes: Map[String,VulkanEnumEnum] = mapedEnums("VkResult").enums
   val successCodes: Map[String,VulkanEnumEnum] = resultCodes.filter(_._2.value.toInt >= 0)
   val errorCodes: Map[String,VulkanEnumEnum] = resultCodes.filter(_._2.value.toInt < 0)
 }
