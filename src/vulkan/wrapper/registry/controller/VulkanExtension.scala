@@ -9,7 +9,7 @@ class VulkanExtension(registry: Registry, node: Node) extends VulkanController(r
   override type This = VulkanExtension
   override def getThis: VulkanExtension = this
 
-  val name: String = node \@ "name"
+  override val name: String = node \@ "name"
   val number: String = node \@ "number"
   val author: Option[String] = node \@@ "author"
   val contact: Option[String] = node \@@ "contact"
@@ -23,6 +23,6 @@ class VulkanExtension(registry: Registry, node: Node) extends VulkanController(r
 }
 
 object VulkanExtension {
-  def apply(registry: Registry): Map[String,VulkanExtension] =
-    (registry.xml \ "extensions" \ "extension").map(new VulkanExtension(registry,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanExtension] =
+    VulkanComponentMappedData(registry,(registry.xml \ "extensions" \ "extension").map(new VulkanExtension(registry,_)))
 }

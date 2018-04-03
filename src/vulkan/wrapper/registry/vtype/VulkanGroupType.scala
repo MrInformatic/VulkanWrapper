@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.vtype
 
-import vulkan.wrapper.registry.Registry
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
@@ -9,6 +9,6 @@ class VulkanGroupType(registry: Registry, node: Node) extends VulkanOtherType(re
 }
 
 object VulkanGroupType {
-  def apply(registry: Registry): Map[String,VulkanGroupType] =
-    (registry.xml \ "types" \ "type").filter(t => t \@ "category" == "group").map(new VulkanGroupType(registry,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanGroupType] =
+    VulkanComponentMappedData(registry,(registry.xml \ "types" \ "type").filter(t => t \@ "category" == "group").map(new VulkanGroupType(registry,_)))
 }

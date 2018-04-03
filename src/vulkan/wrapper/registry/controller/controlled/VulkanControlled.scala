@@ -6,7 +6,7 @@ import vulkan.wrapper.registry.controller.controll.VulkanControll
 
 import scala.xml.Node
 
-class VulkanControlled[T[X <: VulkanController] <: VulkanControll[X],U <: VulkanController](registry: Registry, val vulkanControll: T[U], val node: Node) {
-  def name: String = node \@ "name"
-  def comment: Option[String] = node \@@ "comment"
+class VulkanControlled[+T[+X <: VulkanController] <: VulkanControll[X],+U <: VulkanController](registry: Registry, val vulkanControll: T[U], node: Node) extends VulkanNamedComponent(registry,node) {
+  val name: String = node \@ "name"
+  val comment: Option[String] = node \@@ "comment"
 }

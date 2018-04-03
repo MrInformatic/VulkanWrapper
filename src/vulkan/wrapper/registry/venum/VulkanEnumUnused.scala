@@ -4,7 +4,7 @@ import vulkan.wrapper.registry.{Registry, _}
 
 import scala.xml.Node
 
-class VulkanEnumUnused(registry: Registry, val vulkanEnum: VulkanEnum, val node: Node) extends RegistryType(registry){
+class VulkanEnumUnused(registry: Registry, val vulkanEnum: VulkanEnum, node: Node) extends VulkanComponent(registry,node){
   val start: String = node \@ "start"
   val end: Option[String] = node \@@ "end"
   val vendor: Option[String] = node \@@ "vendor"
@@ -12,6 +12,6 @@ class VulkanEnumUnused(registry: Registry, val vulkanEnum: VulkanEnum, val node:
 }
 
 object VulkanEnumUnused {
-  def apply(registry: Registry, vulkanEnum: VulkanEnum, node: Node): Traversable[VulkanEnumUnused] =
-    (node \ "unused").map(new VulkanEnumUnused(registry,vulkanEnum,_))
+  def apply(registry: Registry, vulkanEnum: VulkanEnum, node: Node): VulkanComponentSequentalData[VulkanEnumUnused] =
+    VulkanComponentSequentalData(registry,(node \ "unused").map(new VulkanEnumUnused(registry,vulkanEnum,_)))
 }

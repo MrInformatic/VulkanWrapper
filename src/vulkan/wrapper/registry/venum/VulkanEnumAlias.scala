@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.venum
 
-import vulkan.wrapper.registry.Registry
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
@@ -10,6 +10,6 @@ class VulkanEnumAlias(registry: Registry, vulkanEnum: VulkanEnum, node: Node) ex
 }
 
 object VulkanEnumAlias {
-  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Map[String,VulkanEnumAlias] =
-    (node \ "enum").filter(_.attribute("alias").nonEmpty).map(new VulkanEnumAlias(registry,vulkanEnum,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): VulkanComponentMappedData[VulkanEnumAlias] =
+    VulkanComponentMappedData(registry,(node \ "enum").filter(_.attribute("alias").nonEmpty).map(new VulkanEnumAlias(registry,vulkanEnum,_)))
 }

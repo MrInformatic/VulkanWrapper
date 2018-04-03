@@ -6,9 +6,9 @@ object XMLAnalyze {
   def main(args: Array[String]): Unit ={
     val xml = XML.loadFile("vk.xml")
 
-    /*(xml \ "extensions" \ "extension" \ "require" \ "enum")
+    (xml \ "extensions" \ "extension" \ "require" \ "enum")
       .filter(_.attributes.forall(i => Set("name","comment").contains(i.key)))
-      .map(_ \@ "name").foreach(println)*/
+      .map(_ \@ "name").foreach(println)
 
     val attrs = (xml \ "extensions" \ "extension" \ "require" \ "enum")
       .map(_.attributes.map(_.key).toSet)

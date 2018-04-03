@@ -10,13 +10,13 @@ class VulkanFeature(registry: Registry, node: Node) extends VulkanController(reg
   override def getThis: VulkanFeature = this
 
   def api: String = node \@ "api"
-  def name: String = node \@ "name"
+  override val name: String = node \@ "name"
   def number: String = node \@ "number"
   def protect: Option[String] = node \@@ "protect"
   def comment: Option[String] = node \@@ "comment"
 }
 
 object VulkanFeature {
-  def apply(registry: Registry): Map[String,VulkanFeature] =
-    (registry.xml \ "feature").map(new VulkanFeature(registry,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanFeature] =
+    VulkanComponentMappedData(registry,(registry.xml \ "feature").map(new VulkanFeature(registry,_)))
 }

@@ -1,17 +1,19 @@
 package vulkan.wrapper.registry.venum
 
+import vulkan.wrapper.registry.vtype.VulkanEnumType
 import vulkan.wrapper.registry.{Registry, _}
 
 import scala.xml.Node
 
-class VulkanEnum(registry: Registry,val node: Node) extends RegistryType(registry){
-  val valueEnums: Map[String,VulkanEnumValue] = VulkanEnumValue(registry,this,node)
-  val bitposEnums: Map[String,VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
-  val aliasEnums: Map[String,VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
-  val enums: Map[String,VulkanEnumEnum] = valueEnums ++ bitposEnums ++ aliasEnums
+class VulkanEnum(registry: Registry,node: Node) extends VulkanComponent(registry,node){
+  val valueEnums: VulkanComponentMappedData[VulkanEnumValue] = VulkanEnumValue(registry,this,node)
+  val bitposEnums: VulkanComponentMappedData[VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
+  val aliasEnums: VulkanComponentMappedData[VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
+  val enums: VulkanComponentMappedData[VulkanEnumEnum] = valueEnums ++ bitposEnums ++ aliasEnums
 
-  val unused: Traversable[VulkanEnumUnused] = VulkanEnumUnused(registry,this,node)
+  val unused: VulkanComponentSequentalData[VulkanEnumUnused] = VulkanEnumUnused(registry,this,node)
   val name: Option[String] = node \@@ "name"
+  lazy val enumType: Option[VulkanEnumType] = name.flatMap(registry.enumTypes.byNameOption)
   val typeName: Option[String] = node \@@ "type"
   val start: Option[String] = node \@@ "start"
   val end: Option[String] = node \@@ "end"
@@ -20,6 +22,6 @@ class VulkanEnum(registry: Registry,val node: Node) extends RegistryType(registr
 }
 
 object VulkanEnum {
-  def apply(registry: Registry): Traversable[VulkanEnum] =
-    (registry.xml \ "enums").map(new VulkanEnum(registry,_))
+  def apply(registry: Registry): VulkanEnumData =
+    VulkanEnumData(registry,(registry.xml \ "enums").map(new VulkanEnum(registry,_)))
 }

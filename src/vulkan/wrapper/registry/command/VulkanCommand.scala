@@ -4,19 +4,20 @@ import vulkan.wrapper.registry.controller.VulkanFeature
 import vulkan.wrapper.registry.controller.controll.VulkanControllRequire
 import vulkan.wrapper.registry.venum.VulkanEnumEnum
 import vulkan.wrapper.registry.vtype.VulkanType
-import vulkan.wrapper.registry.{Registry, RegistryType, _}
+import vulkan.wrapper.registry.{Registry, RegistryComponent, _}
 
 import scala.xml.Node
 
-class VulkanCommand(registry: Registry, val node: Node) extends RegistryType(registry){
-  val params: Traversable[VulkanCommandParam] = VulkanCommandParam(registry,this,node,false)
-  val implicitexternsyncparams: Traversable[VulkanCommandParam] = (node \ "implicitexternsyncparams").headOption.seq.flatMap(VulkanCommandParam(registry,this,_,true))
+class VulkanCommand(registry: Registry, node: Node) extends VulkanNamedComponent(registry,node){
+  val params: VulkanComponentMappedData[VulkanCommandNormalParam] = VulkanCommandNormalParam(registry,this,node)
+  val implicitexternsyncparams: VulkanComponentMappedData[VulkanCommandImplicitExternsyncParam] =
+    VulkanCommandImplicitExternsyncParam(registry,this,node)
 
   val queues: Traversable[VulkanCommandQueues.VulkanCommandQueue] =
     (node \@@ "queues").seq.flatMap(_.split(",").seq.map(VulkanCommandQueues.withName))
 
-  lazy val successcodes: Traversable[VulkanEnumEnum] = (node \@@ "successcodes").seq.flatMap(_.split(",").seq).flatMap(registry.successCodes.get)
-  lazy val errorcodes: Traversable[VulkanEnumEnum] = (node \@@ "errorcodes").seq.flatMap(_.split(",").seq).flatMap(registry.errorCodes.get)
+  lazy val successcodes: Traversable[VulkanEnumEnum] = (node \@@ "successcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.successByNameOption)
+  lazy val errorcodes: Traversable[VulkanEnumEnum] = (node \@@ "errorcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.errorByNameOption)
 
   val renderpass: Option[VulkanCommandRenderPasses.VulkanCommandRenderPass] =
     (node \@@ "renderpass").map(VulkanCommandRenderPasses.withName)
@@ -29,18 +30,17 @@ class VulkanCommand(registry: Registry, val node: Node) extends RegistryType(reg
 
   val comment: Option[String] = node \@@ "comment"
 
-  lazy val typeName: Option[VulkanType] = ((node \ "proto").head \@\ "type").flatMap(registry.types.get)
+  lazy val typeName: Option[VulkanType] = ((node \ "proto").head \@\ "type").flatMap(registry.types.byNameOption)
 
-  val name: String = (node \ "proto").head @\\ "name"
+  override val name: String = (node \ "proto").head @\\ "name"
 
-  lazy val alias: Option[VulkanCommand] = (node \@\ "alias").flatMap(registry.commands.get)
+  lazy val alias: Option[VulkanCommand] = (node \@\ "alias").flatMap(registry.commands.byNameOption)
 
   val description: Option[String] = node \@\ "description"
 }
 
 object VulkanCommand {
-  def apply(registry: Registry): Map[String,VulkanCommand] =
-    (registry.xml \ "commands" \ "command").filter(_.attribute("alias").isEmpty).map(new VulkanCommand(registry,_))
-      .map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanCommand] =
+    VulkanComponentMappedData(registry,(registry.xml \ "commands" \ "command").filter(_.attribute("alias").isEmpty).map(new VulkanCommand(registry,_)))
 }
 

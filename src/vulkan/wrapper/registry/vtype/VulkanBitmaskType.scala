@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.vtype
 
-import vulkan.wrapper.registry.Registry
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
@@ -9,6 +9,6 @@ class VulkanBitmaskType(registry: Registry, node: Node) extends VulkanOtherType(
 }
 
 object VulkanBitmaskType {
-  def apply(registry: Registry): Map[String,VulkanBitmaskType] =
-    (registry.xml \ "types" \ "type").filter(t => t \@ "category" == "bitmask").map(new VulkanBitmaskType(registry,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanBitmaskType] =
+    VulkanComponentMappedData(registry,(registry.xml \ "types" \ "type").filter(t => t \@ "category" == "bitmask").map(new VulkanBitmaskType(registry,_)))
 }

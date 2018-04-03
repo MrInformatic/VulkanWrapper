@@ -1,14 +1,14 @@
 package vulkan.wrapper.registry.vtype
 
-import vulkan.wrapper.registry.Registry
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
-class VulkanStructType(registry: Registry,node: Node) extends VulkanMemberType(registry, node) {
+class VulkanStructType(registry: Registry, node: Node) extends VulkanMemberType(registry, node) {
 
 }
 
 object VulkanStructType {
-  def apply(registry: Registry): Map[String,VulkanStructType] =
-    (registry.xml \ "types" \ "type").filter(t => Set("struct","union").contains(t \@ "category")).map(new VulkanStructType(registry,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanStructType] =
+    VulkanComponentMappedData(registry,(registry.xml \ "types" \ "type").filter(t => Set("struct","union").contains(t \@ "category")).map(new VulkanStructType(registry,_)))
 }

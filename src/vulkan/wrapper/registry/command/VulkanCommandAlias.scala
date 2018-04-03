@@ -1,18 +1,17 @@
 package vulkan.wrapper.registry.command
 
-import vulkan.wrapper.registry.{Registry, RegistryType}
+import vulkan.wrapper.registry.{Registry, RegistryComponent, VulkanComponentMappedData, VulkanNamedComponent}
 
 import scala.xml.Node
 
-class VulkanCommandAlias(registry: Registry, val node: Node) extends RegistryType(registry){
-  val name: String = node \@ "name"
+class VulkanCommandAlias(registry: Registry, node: Node) extends VulkanNamedComponent(registry,node){
+  override val name: String = node \@ "name"
   lazy val alias: VulkanCommand = registry.commands(node \@ "alias")
 }
 
 object VulkanCommandAlias {
-  def apply(registry: Registry): Map[String,VulkanCommandAlias] =
-    (registry.xml \ "commands" \ "command").filter(_.attribute("alias").nonEmpty).map(new VulkanCommandAlias(registry,_))
-      .map(i => (i.name,i)).toMap
+  def apply(registry: Registry): VulkanComponentMappedData[VulkanCommandAlias] =
+    VulkanComponentMappedData(registry,(registry.xml \ "commands" \ "command").filter(_.attribute("alias").nonEmpty).map(new VulkanCommandAlias(registry,_)))
 }
 
 

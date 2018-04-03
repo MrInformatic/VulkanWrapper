@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.venum
 
-import vulkan.wrapper.registry.Registry
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
@@ -11,8 +11,8 @@ class VulkanEnumBitpos(registry: Registry, vulkanEnum: VulkanEnum, node: Node) e
 }
 
 object VulkanEnumBitpos {
-  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): Map[String,VulkanEnumBitpos] =
-    (node \ "enum").filter(_.attribute("bitpos").nonEmpty).map(new VulkanEnumBitpos(registry,vulkanEnum,_)).map(i => (i.name,i)).toMap
+  def apply(registry: Registry,vulkanEnum: VulkanEnum,node: Node): VulkanComponentMappedData[VulkanEnumBitpos] =
+    VulkanComponentMappedData(registry,(node \ "enum").filter(_.attribute("bitpos").nonEmpty).map(new VulkanEnumBitpos(registry,vulkanEnum,_)))
 }
 
 
