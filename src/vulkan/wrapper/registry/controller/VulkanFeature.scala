@@ -6,8 +6,7 @@ import vulkan.wrapper.registry.controller.controll.VulkanControll
 import scala.xml.Node
 
 class VulkanFeature(registry: Registry, node: Node) extends VulkanController(registry,node){
-  override type This = VulkanFeature
-  override def getThis: VulkanFeature = this
+  override def getThis: this.type = this
 
   def api: String = node \@ "api"
   override val name: String = node \@ "name"

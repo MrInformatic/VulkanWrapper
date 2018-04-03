@@ -7,12 +7,12 @@ import vulkan.wrapper.registry.venum.VulkanEnumEnum
 
 import scala.xml.Node
 
-class VulkanControlledEnumReference[+T[+X <: VulkanController] <: VulkanControll[X],+U <: VulkanController](registry: Registry, vulkanControll: T[U], node: Node) extends VulkanControlledEnumExtends(registry,vulkanControll,node) {
+class VulkanControlledEnumReference[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnumExtends[T,U](registry,vulkanControll,node) {
   lazy val enum: VulkanEnumEnum = registry.enums.enumByName(name)
 }
 
 object VulkanControlledEnumReference {
-  def apply[T[+X <: VulkanController] <: VulkanControll[X],U <: VulkanController](registry: Registry, vulkanControll: T[U], node: Node): VulkanComponentMappedData[VulkanControlledEnumReference[T,U]] =
+  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry, vulkanControll: T, node: Node): VulkanComponentMappedData[VulkanControlledEnumReference[T,U]] =
     VulkanComponentMappedData(registry,(node \ "enum").filter(_.attributes.forall(i => Set("name","comment","api").contains(i.key)))
       .map(new VulkanControlledEnumReference[T,U](registry,vulkanControll,_)))
 }

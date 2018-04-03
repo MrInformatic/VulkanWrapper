@@ -6,11 +6,10 @@ import vulkan.wrapper.registry.{Registry, RegistryComponent, VulkanComponentMapp
 import scala.xml.Node
 
 abstract class VulkanController(registry: Registry, node: Node) extends VulkanNamedComponent(registry,node){
-  type This <: VulkanController
-  def getThis: This
+  def getThis: this.type
 
-  var requiresTags: VulkanComponentSequentalData[VulkanControllRequire[This]] = VulkanControllRequire[This](registry,getThis,node)
-  var removesTags: VulkanComponentSequentalData[VulkanControllRemove[This]] = VulkanControllRemove[This](registry,getThis,node)
-  val controllTags: VulkanComponentSequentalData[VulkanControll[This]] =
+  var requiresTags: VulkanComponentSequentalData[VulkanControllRequire[this.type]] = VulkanControllRequire[this.type](registry,getThis,node)
+  var removesTags: VulkanComponentSequentalData[VulkanControllRemove[this.type]] = VulkanControllRemove[this.type](registry,getThis,node)
+  val controllTags: VulkanComponentSequentalData[VulkanControll[this.type]] =
     requiresTags ++ removesTags
 }

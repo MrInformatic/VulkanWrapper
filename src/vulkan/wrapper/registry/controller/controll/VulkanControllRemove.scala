@@ -6,8 +6,7 @@ import vulkan.wrapper.registry.controller.VulkanController
 import scala.xml.Node
 
 class VulkanControllRemove[+T <: VulkanController](registry: Registry, vulkanController: T, node: Node) extends VulkanControll[T](registry,vulkanController,node) {
-  override type This[+X <: VulkanController] = VulkanControllRemove[X]
-  override def getThis: VulkanControllRemove[T] = this
+  override def getThis: this.type = this
 }
 
 object VulkanControllRemove {

@@ -6,11 +6,11 @@ import vulkan.wrapper.registry.controller.controll.VulkanControll
 
 import scala.xml.Node
 
-class VulkanControlledCommand[+T[+X <: VulkanController] <: VulkanControll[X],+U <: VulkanController](registry: Registry, vulkanControll: T[U], node: Node) extends VulkanControlled(registry,vulkanControll,node) {
+class VulkanControlledCommand[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlled[T,U](registry,vulkanControll,node) {
   lazy val command = registry.commands(name)
 }
 
 object VulkanControlledCommand {
-  def apply[T[+X <: VulkanController] <: VulkanControll[X],U <: VulkanController](registry: Registry,vulkanControll: T[U],node: Node): VulkanComponentMappedData[VulkanControlledCommand[T,U]] =
+  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry,vulkanControll: T,node: Node): VulkanComponentMappedData[VulkanControlledCommand[T,U]] =
     VulkanComponentMappedData(registry,(node \ "command").map(new VulkanControlledCommand[T,U](registry,vulkanControll,_)))
 }

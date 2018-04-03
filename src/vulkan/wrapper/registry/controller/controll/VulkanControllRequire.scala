@@ -6,8 +6,7 @@ import vulkan.wrapper.registry.controller.{VulkanController, VulkanExtension, Vu
 import scala.xml.Node
 
 class VulkanControllRequire[+T <: VulkanController](registry: Registry, vulkanController: T, node: Node) extends VulkanControll[T](registry,vulkanController,node) {
-  override type This[+X <: VulkanController] = VulkanControllRequire[X]
-  override def getThis: VulkanControllRequire[T] = this
+  override def getThis: this.type = this
 
   def extension: Option[VulkanExtension] = (node \@@ "extension").flatMap(registry.extensions.byNameOption)
   def feature: Option[VulkanFeature] = (node \@@ "feature").flatMap(registry.features.byNameOption)

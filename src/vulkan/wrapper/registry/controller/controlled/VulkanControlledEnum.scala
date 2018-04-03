@@ -6,6 +6,6 @@ import vulkan.wrapper.registry.controller.controll.VulkanControll
 
 import scala.xml.Node
 
-class VulkanControlledEnum[+T[+X <: VulkanController] <: VulkanControll[X],+U <: VulkanController](registry: Registry, vulkanControll: T[U], node: Node) extends VulkanControlled(registry,vulkanControll,node) {
+class VulkanControlledEnum[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlled[T,U](registry,vulkanControll,node) {
   val api: Option[String] = node \@@ "api"
 }
