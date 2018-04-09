@@ -16,6 +16,6 @@ class VulkanFeature(registry: Registry, node: Node) extends VulkanController(reg
 }
 
 object VulkanFeature {
-  def apply(registry: Registry): VulkanComponentMappedData[VulkanFeature] =
-    VulkanComponentMappedData(registry,(registry.xml \ "feature").map(new VulkanFeature(registry,_)))
+  def apply(registry: Registry): VulkanControllerData[VulkanFeature] =
+    VulkanControllerData(registry,(registry.xml \ "feature").map(new VulkanFeature(registry,_)))
 }

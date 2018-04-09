@@ -9,7 +9,8 @@ class VulkanEnum(registry: Registry,node: Node) extends VulkanComponent(registry
   val valueEnums: VulkanComponentMappedData[VulkanEnumValue] = VulkanEnumValue(registry,this,node)
   val bitposEnums: VulkanComponentMappedData[VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
   val aliasEnums: VulkanComponentMappedData[VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
-  val enums: VulkanComponentMappedData[VulkanEnumEnum] = valueEnums ++ bitposEnums ++ aliasEnums
+  val enums: VulkanComponentMappedData[VulkanEnumEnum] =
+    VulkanComponentMappedData(valueEnums, bitposEnums, aliasEnums)
 
   val unused: VulkanComponentSequentalData[VulkanEnumUnused] = VulkanEnumUnused(registry,this,node)
   val name: Option[String] = node \@@ "name"

@@ -1,7 +1,8 @@
 package vulkan.wrapper.registry.command
 
-import vulkan.wrapper.registry.controller.VulkanFeature
-import vulkan.wrapper.registry.controller.controll.VulkanControllRequire
+import vulkan.wrapper.registry.controller.{VulkanController, VulkanFeature}
+import vulkan.wrapper.registry.controller.controll.{VulkanControll, VulkanControllData, VulkanControllRequire}
+import vulkan.wrapper.registry.controller.controlled.VulkanControlled
 import vulkan.wrapper.registry.venum.VulkanEnumEnum
 import vulkan.wrapper.registry.vtype.VulkanType
 import vulkan.wrapper.registry.{Registry, RegistryComponent, _}
@@ -37,6 +38,15 @@ class VulkanCommand(registry: Registry, node: Node) extends VulkanNamedComponent
   lazy val alias: Option[VulkanCommand] = (node \@\ "alias").flatMap(registry.commands.byNameOption)
 
   val description: Option[String] = node \@\ "description"
+
+  def typeController[T <: VulkanControll[U],U <: VulkanController](data: VulkanControllData[T,U]): Traversable[VulkanController] =
+    data.commands.controllerComponents(this)
+
+  def typeControll[T <: VulkanControll[U],U <: VulkanController](data: VulkanControllData[T,U]): Traversable[VulkanControll[U]] =
+    data.commands.controllComponents(this)
+
+  def typeControlled[T <: VulkanControll[U],U <: VulkanController](data: VulkanControllData[T,U]): Traversable[VulkanControlled[T,U]] =
+    data.commands.controlledComponents(this)
 }
 
 object VulkanCommand {

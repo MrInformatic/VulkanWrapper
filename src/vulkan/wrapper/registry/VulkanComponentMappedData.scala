@@ -7,13 +7,19 @@ class VulkanComponentMappedData[+T <: VulkanNamedComponent](registry: Registry, 
   def byName(name: String): T = mappedComponents(name)
   def byNameOption(name:String): Option[T] = mappedComponents.get(name)
 
-  def ++[U >: T <: VulkanNamedComponent](other: VulkanComponentMappedData[U]): VulkanComponentMappedData[U] =
-    VulkanComponentMappedData(registry,components ++ other.components)
+  /*def ++[U >: T <: VulkanNamedComponent](other: VulkanComponentMappedData[U]): VulkanComponentMappedData[U] =
+    VulkanComponentMappedData(registry,components ++ other.components)*/
 }
 
 object VulkanComponentMappedData {
   def apply[T <: VulkanNamedComponent](registry: Registry,components: Traversable[T]): VulkanComponentMappedData[T] =
     new VulkanComponentMappedData(registry,components)
+
+  def apply[T <: VulkanNamedComponent](datas: VulkanComponentMappedData[T]*): VulkanComponentMappedData[T] =
+    new VulkanComponentMappedData[T](datas.head.registry,datas.flatMap(_.components))
+
+  def fromSeq[T <: VulkanNamedComponent](datas: Traversable[VulkanComponentMappedData[T]]): VulkanComponentMappedData[T] =
+    new VulkanComponentMappedData[T](datas.head.registry,datas.flatMap(_.components))
 
   //implicit def data2Seq[T <: VulkanComponent](data: VulkanComponentMappedData[T]): Traversable[T] = data.components
 }

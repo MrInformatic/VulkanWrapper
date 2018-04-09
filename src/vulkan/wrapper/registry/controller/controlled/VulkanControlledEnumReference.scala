@@ -12,7 +12,9 @@ class VulkanControlledEnumReference[+T <: VulkanControll[U],+U <: VulkanControll
 }
 
 object VulkanControlledEnumReference {
-  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry, vulkanControll: T, node: Node): VulkanComponentMappedData[VulkanControlledEnumReference[T,U]] =
-    VulkanComponentMappedData(registry,(node \ "enum").filter(_.attributes.forall(i => Set("name","comment","api").contains(i.key)))
-      .map(new VulkanControlledEnumReference[T,U](registry,vulkanControll,_)))
+  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry, vulkanControll: T, node: Node): VulkanControlledData[VulkanControlledEnumReference[T,U],T,U,VulkanEnumEnum] =
+    VulkanControlledData[VulkanControlledEnumReference[T,U],T,U,VulkanEnumEnum](registry,
+      (node \ "enum").filter(_.attributes.forall(i => Set("name","comment","api").contains(i.key)))
+        .map(new VulkanControlledEnumReference[T,U](registry,vulkanControll,_)),
+          (i: VulkanControlledEnumReference[T,U]) => i.enum)
 }

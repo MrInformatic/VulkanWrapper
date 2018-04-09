@@ -3,6 +3,7 @@ package vulkan.wrapper.registry.controller.controlled
 import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controll.VulkanControll
+import vulkan.wrapper.registry.venum.VulkanEnum
 
 import scala.xml.Node
 
@@ -11,7 +12,8 @@ class VulkanControlledEnumAlias[+T <: VulkanControll[U],+U <: VulkanController](
 }
 
 object VulkanControlledEnumAlias {
-  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry, vulkanControll: T, node: Node): VulkanComponentMappedData[VulkanControlledEnumAlias[T,U]] =
-    VulkanComponentMappedData(registry,(node \ "enum").filter(n => n.attribute("alias").nonEmpty)
-      .map(new VulkanControlledEnumAlias[T,U](registry,vulkanControll,_)))
+  def apply[T <: VulkanControll[U],U <: VulkanController](registry: Registry, vulkanControll: T, node: Node): VulkanControlledOptionData[VulkanControlledEnumAlias[T,U],T,U,VulkanEnum] =
+    VulkanControlledOptionData[VulkanControlledEnumAlias[T,U],T,U,VulkanEnum](registry,
+      (node \ "enum").filter(n => n.attribute("alias").nonEmpty).map(new VulkanControlledEnumAlias[T,U](registry,vulkanControll,_)),
+      (i: VulkanControlledEnumAlias[T,U]) => i.enumExtends)
 }

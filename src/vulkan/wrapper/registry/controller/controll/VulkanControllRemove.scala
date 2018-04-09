@@ -10,6 +10,6 @@ class VulkanControllRemove[+T <: VulkanController](registry: Registry, vulkanCon
 }
 
 object VulkanControllRemove {
-  def apply[T <: VulkanController](registry: Registry,vulkanController: T, node: Node):VulkanComponentSequentalData[VulkanControllRemove[T]] =
-    VulkanComponentSequentalData(registry,(node \ "remove").map(new VulkanControllRemove[T](registry,vulkanController,_)))
+  def apply[T <: VulkanController](registry: Registry,vulkanController: T, node: Node):VulkanControllData[VulkanControllRemove[T],T] =
+    VulkanControllData[VulkanControllRemove[T],T](registry,(node \ "remove").map(new VulkanControllRemove[T](registry,vulkanController,_)))
 }

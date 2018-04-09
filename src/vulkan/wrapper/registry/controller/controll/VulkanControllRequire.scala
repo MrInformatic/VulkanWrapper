@@ -13,6 +13,6 @@ class VulkanControllRequire[+T <: VulkanController](registry: Registry, vulkanCo
 }
 
 object VulkanControllRequire {
-  def apply[T <: VulkanController](registry: Registry,vulkanController: T,node: Node): VulkanComponentSequentalData[VulkanControllRequire[T]] =
-    VulkanComponentSequentalData(registry,(node \ "require").map(new VulkanControllRequire(registry,vulkanController,_)))
+  def apply[T <: VulkanController](registry: Registry,vulkanController: T,node: Node): VulkanControllData[VulkanControllRequire[T],T] =
+    VulkanControllData[VulkanControllRequire[T],T](registry,(node \ "require").map(new VulkanControllRequire(registry,vulkanController,_)))
 }

@@ -22,6 +22,6 @@ class VulkanExtension(registry: Registry, node: Node) extends VulkanController(r
 }
 
 object VulkanExtension {
-  def apply(registry: Registry): VulkanComponentMappedData[VulkanExtension] =
-    VulkanComponentMappedData(registry,(registry.xml \ "extensions" \ "extension").map(new VulkanExtension(registry,_)))
+  def apply(registry: Registry): VulkanControllerData[VulkanExtension] =
+    VulkanControllerData(registry,(registry.xml \ "extensions" \ "extension").map(new VulkanExtension(registry,_)))
 }
