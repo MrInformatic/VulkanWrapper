@@ -1,17 +1,10 @@
 package vulkan.wrapper.registry.venum
 
-import vulkan.wrapper.registry.controller.VulkanController
-import vulkan.wrapper.registry.controller.controll.{VulkanControll, VulkanControllData}
-import vulkan.wrapper.registry.controller.controlled.VulkanControlled
-import vulkan.wrapper.registry.{Registry, _}
-
-import scala.xml.Node
-
-abstract class VulkanEnumEnum(registry: Registry, val vulkanEnum: VulkanEnum, node: Node) extends VulkanNamedComponent(registry,node){
+/**
+  * Created by philipp on 10.04.18.
+  */
+trait VulkanEnumEnum {
+  val name: String
   val value: String
-
-  override val name: String = node \@ "name"
-  val api: Option[String] = node \@@ "api"
-
-
+  val api: Option[String]
 }

@@ -9,9 +9,12 @@ import scala.xml.Node
 
 class VulkanControlledEnumOffset[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnum[T,U](registry,vulkanControll,node) {
   lazy val enumExtends: VulkanEnum = registry.enums.byName(node \@ "extends")
-  val offset: String = node \@ "offset"
-  val extnumber: Option[String] = node \@@ "extnumber"
-  val dir: Option[String] = node \@@ "dir"
+  val offset: Int = (node \@ "offset").toInt
+  val extnumber: Option[Int] = (node \@@ "extnumber").map(_.toInt)
+  val dir: Boolean = (node \@@ "dir").contains("-")
+
+  //TODO: VulkanEnum offset value calculation
+  override val value: String = _
 }
 
 object VulkanControlledEnumOffset {

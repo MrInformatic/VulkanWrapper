@@ -5,7 +5,7 @@ import vulkan.wrapper.registry.controller.controll.{VulkanControllRemove, Vulkan
 import vulkan.wrapper.registry.controller.{VulkanController, VulkanControllerData, VulkanExtension, VulkanFeature}
 import vulkan.wrapper.registry.tag.VulkanTag
 import vulkan.wrapper.registry.vendorid.VulkanVendorId
-import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumData, VulkanEnumEnum, VulkanResultData}
+import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumData, VulkanEnumNormalEnum, VulkanResultData}
 import vulkan.wrapper.registry.vtype._
 
 import scala.xml.XML

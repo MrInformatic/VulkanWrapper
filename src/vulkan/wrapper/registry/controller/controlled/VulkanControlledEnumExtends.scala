@@ -7,6 +7,6 @@ import vulkan.wrapper.registry.venum.VulkanEnum
 
 import scala.xml.Node
 
-class VulkanControlledEnumExtends[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnum[T,U](registry,vulkanControll,node) {
+abstract class VulkanControlledEnumExtends[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnum[T,U](registry,vulkanControll,node) {
   lazy val enumExtends: Option[VulkanEnum] = (node \@@ "extends").flatMap(registry.enums.byNameOption)
 }

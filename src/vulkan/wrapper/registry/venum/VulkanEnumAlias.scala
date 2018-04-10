@@ -4,9 +4,9 @@ import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 
 import scala.xml.Node
 
-class VulkanEnumAlias(registry: Registry, vulkanEnum: VulkanEnum, node: Node) extends VulkanEnumEnum(registry,vulkanEnum,node){
-  lazy val alias: VulkanEnumEnum = vulkanEnum.enums(node \@ "alias")
-  lazy val value: String = alias.value
+class VulkanEnumAlias(registry: Registry, vulkanEnum: VulkanEnum, node: Node) extends VulkanEnumNormalEnum(registry,vulkanEnum,node){
+  lazy val alias: VulkanEnumNormalEnum = vulkanEnum.enums(node \@ "alias")
+  override lazy val value: String = alias.value
 }
 
 object VulkanEnumAlias {

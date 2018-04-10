@@ -3,7 +3,7 @@ package vulkan.wrapper.registry.command
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controll.{VulkanControll, VulkanControllData}
 import vulkan.wrapper.registry.controller.controlled.VulkanControlled
-import vulkan.wrapper.registry.venum.VulkanEnumEnum
+import vulkan.wrapper.registry.venum.VulkanEnumNormalEnum
 import vulkan.wrapper.registry.vtype.VulkanType
 import vulkan.wrapper.registry._
 
@@ -22,8 +22,8 @@ class VulkanCommandData(registry: Registry,vulkanCommand: VulkanCommand,node: No
   val queues: Traversable[VulkanCommandQueues.VulkanCommandQueue] =
     (node \@@ "queues").seq.flatMap(_.split(",").seq.map(VulkanCommandQueues.withName))
 
-  lazy val successcodes: Traversable[VulkanEnumEnum] = (node \@@ "successcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.successByNameOption)
-  lazy val errorcodes: Traversable[VulkanEnumEnum] = (node \@@ "errorcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.errorByNameOption)
+  lazy val successcodes: Traversable[VulkanEnumNormalEnum] = (node \@@ "successcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.successByNameOption)
+  lazy val errorcodes: Traversable[VulkanEnumNormalEnum] = (node \@@ "errorcodes").seq.flatMap(_.split(",").seq).flatMap(registry.result.errorByNameOption)
 
   val renderpass: Option[VulkanCommandRenderPasses.VulkanCommandRenderPass] =
     (node \@@ "renderpass").map(VulkanCommandRenderPasses.withName)

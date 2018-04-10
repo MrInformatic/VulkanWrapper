@@ -3,7 +3,7 @@ package vulkan.wrapper.registry.command
 import vulkan.wrapper.registry.controller.{VulkanController, VulkanFeature}
 import vulkan.wrapper.registry.controller.controll.{VulkanControll, VulkanControllData, VulkanControllRequire}
 import vulkan.wrapper.registry.controller.controlled.VulkanControlled
-import vulkan.wrapper.registry.venum.VulkanEnumEnum
+import vulkan.wrapper.registry.venum.VulkanEnumNormalEnum
 import vulkan.wrapper.registry.vtype.VulkanType
 import vulkan.wrapper.registry.{Registry, RegistryComponent, _}
 

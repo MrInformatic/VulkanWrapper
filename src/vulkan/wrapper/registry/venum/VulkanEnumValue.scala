@@ -4,7 +4,7 @@ import vulkan.wrapper.registry._
 
 import scala.xml.Node
 
-class VulkanEnumValue(registry: Registry, vulkanEnum: VulkanEnum, node: Node) extends VulkanEnumEnum(registry,vulkanEnum,node) {
+class VulkanEnumValue(registry: Registry, vulkanEnum: VulkanEnum, node: Node) extends VulkanEnumNormalEnum(registry,vulkanEnum,node) {
   val typeName: Option[String] = node \@@ "type"
   override val value: String = node \@ "value"
 }

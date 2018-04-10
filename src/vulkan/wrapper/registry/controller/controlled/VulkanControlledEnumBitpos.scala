@@ -8,7 +8,9 @@ import vulkan.wrapper.registry.venum.VulkanEnum
 import scala.xml.Node
 
 class VulkanControlledEnumBitpos[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnumExtends[T,U](registry,vulkanControll,node) {
-  def bitpos: String = node \@ "bitpos"
+  def bitpos: Int = (node \@ "bitpos").toInt
+  def bitvalue: Int = 2 ^ bitpos
+  override val value: String = bitvalue.toString
 }
 
 object VulkanControlledEnumBitpos {

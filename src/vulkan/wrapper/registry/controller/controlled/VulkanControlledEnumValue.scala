@@ -8,8 +8,8 @@ import vulkan.wrapper.registry.venum.VulkanEnum
 import scala.xml.Node
 
 class VulkanControlledEnumValue[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnumExtends[T,U](registry,vulkanControll,node) {
-  def value: String = node \@ "value"
-  def typeName: Option[String] = node \@@ "type"
+  override val value: String = node \@ "value"
+  val typeName: Option[String] = node \@@ "type"
 }
 
 object VulkanControlledEnumValue {
