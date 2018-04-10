@@ -5,7 +5,7 @@ import vulkan.wrapper.registry.{Registry, RegistryComponent, _}
 
 import scala.xml.Node
 
-class VulkanCommandParam(registry: Registry, val vulkanCommand: VulkanCommandNode, node: Node) extends VulkanNamedComponent(registry,node){
+class VulkanCommandParam(registry: Registry, val vulkanCommand: VulkanCommand, node: Node) extends VulkanNamedComponent(registry,node){
   val len: Traversable[String] = (node \@@ "len").seq.flatMap(_.split(",").seq)
   val altlen: Traversable[String] = (node \@@ "altlen").seq.flatMap(_.split(",").seq)
   val clen: Traversable[String] = genClen()

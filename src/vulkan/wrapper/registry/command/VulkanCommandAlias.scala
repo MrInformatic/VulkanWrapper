@@ -7,7 +7,7 @@ import scala.xml.Node
 
 class VulkanCommandAlias(registry: Registry, node: Node) extends VulkanCommand(registry,node){
   override val name: String = node \@ "name"
-  override lazy val command: VulkanCommandNode = registry.commandsNode(node \@ "alias")
+  override lazy val data: VulkanCommandData = registry.commandsNode(node \@ "alias").data
 }
 
 object VulkanCommandAlias {
