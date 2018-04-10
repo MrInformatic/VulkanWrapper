@@ -1,5 +1,8 @@
 package vulkan.wrapper.registry.venum
 
+import vulkan.wrapper.registry.controller.VulkanController
+import vulkan.wrapper.registry.controller.controll.VulkanControll
+import vulkan.wrapper.registry.controller.controlled.VulkanControlledEnumValue
 import vulkan.wrapper.registry.vtype.VulkanEnumType
 import vulkan.wrapper.registry.{Registry, _}
 
@@ -9,6 +12,8 @@ class VulkanEnum(registry: Registry,node: Node) extends VulkanComponent(registry
   val valueEnums: VulkanComponentMappedData[VulkanEnumValue] = VulkanEnumValue(registry,this,node)
   val bitposEnums: VulkanComponentMappedData[VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
   val aliasEnums: VulkanComponentMappedData[VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
+  lazy val controlledValueEnums: VulkanComponentMappedData[VulkanControlledEnumValue[VulkanControll[VulkanController],VulkanController]] =
+    registry.controllers.controllTags.enumValues.
   val enums: VulkanComponentMappedData[VulkanEnumNormalEnum] =
     VulkanComponentMappedData(registry, valueEnums, bitposEnums, aliasEnums)
 
