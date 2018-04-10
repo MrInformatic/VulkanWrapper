@@ -15,8 +15,8 @@ object VulkanControlledOptionData {
       processedComponents.filter(_._2.isEmpty).map(_._1))
   }
 
-  def apply[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](datas: VulkanControlledOptionData[T,U,V,W]*): VulkanControlledOptionData[T,U,V,W] =
-    new VulkanControlledOptionData[T,U,V,W](datas.head.registry,datas.flatMap(_.components),
+  def apply[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](registry: Registry,datas: VulkanControlledOptionData[T,U,V,W]*): VulkanControlledOptionData[T,U,V,W] =
+    new VulkanControlledOptionData[T,U,V,W](registry,datas.flatMap(_.components),
       datas.flatMap(_.groupedComponents).groupBy(_._1).mapValues(_.flatMap(_._2)),
       datas.flatMap(_.ungroupedComponents))
 
@@ -25,8 +25,8 @@ object VulkanControlledOptionData {
       datas.flatMap(_.groupedComponents).groupBy(_._1).mapValues(_.flatMap(_._2)),
       datas.flatMap(_.ungroupedComponents))*/
 
-  def fromSeq[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](datas: Traversable[VulkanControlledOptionData[T,U,V,W]]): VulkanControlledOptionData[T,U,V,W] =
-    new VulkanControlledOptionData[T,U,V,W](datas.head.registry,datas.flatMap(_.components),
+  def fromSeq[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](registry: Registry,datas: Traversable[VulkanControlledOptionData[T,U,V,W]]): VulkanControlledOptionData[T,U,V,W] =
+    new VulkanControlledOptionData[T,U,V,W](registry,datas.flatMap(_.components),
       datas.flatMap(_.groupedComponents).groupBy(_._1).mapValues(_.flatMap(_._2)),
       datas.flatMap(_.ungroupedComponents))
 

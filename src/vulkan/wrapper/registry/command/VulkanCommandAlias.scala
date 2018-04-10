@@ -1,12 +1,13 @@
 package vulkan.wrapper.registry.command
 
+import vulkan.wrapper.registry.controller.controlled.VulkanControlledCommand
 import vulkan.wrapper.registry.{Registry, RegistryComponent, VulkanComponentMappedData, VulkanNamedComponent}
 
 import scala.xml.Node
 
-class VulkanCommandAlias(registry: Registry, node: Node) extends VulkanNamedComponent(registry,node){
+class VulkanCommandAlias(registry: Registry, node: Node) extends VulkanCommand(registry,node){
   override val name: String = node \@ "name"
-  lazy val alias: VulkanCommand = registry.commands(node \@ "alias")
+  override lazy val command: VulkanCommandNode = registry.commandsNode(node \@ "alias")
 }
 
 object VulkanCommandAlias {

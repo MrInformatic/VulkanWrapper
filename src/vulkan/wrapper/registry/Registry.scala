@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry
 
-import vulkan.wrapper.registry.command.VulkanCommand
+import vulkan.wrapper.registry.command.{VulkanCommand, VulkanCommandAlias, VulkanCommandNode, VulkanCommandNode$}
 import vulkan.wrapper.registry.controller.controll.{VulkanControllRemove, VulkanControllRequire}
 import vulkan.wrapper.registry.controller.{VulkanController, VulkanControllerData, VulkanExtension, VulkanFeature}
 import vulkan.wrapper.registry.tag.VulkanTag
@@ -30,7 +30,8 @@ class Registry {
   val unionTypes: VulkanComponentMappedData[VulkanUnionType] = VulkanUnionType(this)
 
   val types: VulkanComponentMappedData[VulkanType] =
-    VulkanComponentMappedData(primitiveTypes,
+    VulkanComponentMappedData(this,
+      primitiveTypes,
       includeTypes,
       defineTypes,
       baseTypes,
@@ -44,13 +45,15 @@ class Registry {
 
   val enums: VulkanEnumData = VulkanEnum(this)
 
-  val commands: VulkanComponentMappedData[VulkanCommand] = VulkanCommand(this)
+  val commandsNode: VulkanComponentMappedData[VulkanCommandNode] = VulkanCommandNode(this)
+  val commandsAlias: VulkanComponentMappedData[VulkanCommandAlias] = VulkanCommandAlias(this)
+  val commands: VulkanComponentMappedData[VulkanCommand] = VulkanComponentMappedData(this,commandsNode,commandsAlias)
 
   val features: VulkanControllerData[VulkanFeature] = VulkanFeature(this)
 
   val extensions: VulkanControllerData[VulkanExtension] = VulkanExtension(this)
 
-  val controllers: VulkanControllerData[VulkanController] = VulkanControllerData(features,extensions)
+  val controllers: VulkanControllerData[VulkanController] = VulkanControllerData(this,features,extensions)
 
   /*val featuresRequireingCommand: Map[VulkanCommand, Traversable[VulkanControllRequire[VulkanFeature]]] = features.components
     .flatMap(_.requiresTags.components)

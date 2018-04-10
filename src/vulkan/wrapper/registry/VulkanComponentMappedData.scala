@@ -15,11 +15,11 @@ object VulkanComponentMappedData {
   def apply[T <: VulkanNamedComponent](registry: Registry,components: Traversable[T]): VulkanComponentMappedData[T] =
     new VulkanComponentMappedData(registry,components)
 
-  def apply[T <: VulkanNamedComponent](datas: VulkanComponentMappedData[T]*): VulkanComponentMappedData[T] =
-    new VulkanComponentMappedData[T](datas.head.registry,datas.flatMap(_.components))
+  def apply[T <: VulkanNamedComponent](registry: Registry,datas: VulkanComponentMappedData[T]*): VulkanComponentMappedData[T] =
+    new VulkanComponentMappedData[T](registry,datas.flatMap(_.components))
 
-  def fromSeq[T <: VulkanNamedComponent](datas: Traversable[VulkanComponentMappedData[T]]): VulkanComponentMappedData[T] =
-    new VulkanComponentMappedData[T](datas.head.registry,datas.flatMap(_.components))
+  def fromSeq[T <: VulkanNamedComponent](registry: Registry,datas: Traversable[VulkanComponentMappedData[T]]): VulkanComponentMappedData[T] =
+    new VulkanComponentMappedData[T](registry,datas.flatMap(_.components))
 
   //implicit def data2Seq[T <: VulkanComponent](data: VulkanComponentMappedData[T]): Traversable[T] = data.components
 }

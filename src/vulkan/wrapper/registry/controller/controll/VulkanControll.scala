@@ -1,7 +1,7 @@
 package vulkan.wrapper.registry.controller.controll
 
 import vulkan.wrapper.registry._
-import vulkan.wrapper.registry.command.VulkanCommand
+import vulkan.wrapper.registry.command.{VulkanCommand, VulkanCommandNode$}
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controlled._
 import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum}
@@ -34,13 +34,13 @@ abstract class VulkanControll[+T <: VulkanController](registry: Registry, val vu
     VulkanControlledCommand[this.type,T](registry,getThis,node)
 
   val enumExtends: VulkanControlledOptionData[VulkanControlledEnumExtends[this.type,T],this.type,T,VulkanEnum] =
-    VulkanControlledOptionData(enumValues, enumBitposes, enumAlias)
+    VulkanControlledOptionData(registry, enumValues, enumBitposes, enumAlias)
 
   val enum: VulkanComponentMappedData[VulkanControlledEnum[this.type,T]] =
-    VulkanComponentMappedData(enumExtends, enumOffset, enumReference)
+    VulkanComponentMappedData(registry, enumExtends, enumOffset, enumReference)
 
   def controlled: VulkanComponentMappedData[VulkanControlled[this.type,T]] =
-    VulkanComponentMappedData(types, enum, commands)
+    VulkanComponentMappedData(registry, types, enum, commands)
 
   def profile: Option[String] = node \@@ "profile"
   def comment: Option[String] = node \@@ "comment"

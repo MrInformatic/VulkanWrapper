@@ -19,9 +19,9 @@ object VulkanEnumData {
   def apply(registry: Registry,components: Traversable[VulkanEnum]): VulkanEnumData =
     new VulkanEnumData(registry,components)
 
-  def apply(datas: VulkanEnumData*): VulkanEnumData =
-    new VulkanEnumData(datas.head.registry,datas.flatMap(_.components))
+  def apply(registry: Registry,datas: VulkanEnumData*): VulkanEnumData =
+    new VulkanEnumData(registry,datas.flatMap(_.components))
 
-  def fromSeq(datas: Traversable[VulkanEnumData]): VulkanEnumData =
-    new VulkanEnumData(datas.head.registry,datas.flatMap(_.components))
+  def fromSeq(registry: Registry,datas: Traversable[VulkanEnumData]): VulkanEnumData =
+    new VulkanEnumData(registry,datas.flatMap(_.components))
 }

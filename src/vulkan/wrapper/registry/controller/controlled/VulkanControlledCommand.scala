@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.controller.controlled
 
-import vulkan.wrapper.registry.command.VulkanCommand
+import vulkan.wrapper.registry.command.{VulkanCommand, VulkanCommandNode$}
 import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData}
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controll.VulkanControll

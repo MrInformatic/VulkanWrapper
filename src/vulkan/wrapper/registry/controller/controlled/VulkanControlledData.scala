@@ -17,11 +17,11 @@ object VulkanControlledData {
   def apply[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](registry: Registry, components: Traversable[T],getComponent: T => W): VulkanControlledData[T,U,V,W] =
     new VulkanControlledData[T,U,V,W](registry,components,components.groupBy(getComponent))
 
-  def apply[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](datas: VulkanControlledData[T,U,V,W]*): VulkanControlledData[T,U,V,W] =
-    new VulkanControlledData[T,U,V,W](datas.head.registry,datas.flatMap(_.components),
+  def apply[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](registry: Registry,datas: VulkanControlledData[T,U,V,W]*): VulkanControlledData[T,U,V,W] =
+    new VulkanControlledData[T,U,V,W](registry,datas.flatMap(_.components),
       datas.flatMap(_.groupedComponents.toSeq).groupBy(_._1).mapValues(_.flatMap(_._2)))
 
-  def fromSeq[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](datas: Traversable[VulkanControlledData[T,U,V,W]]): VulkanControlledData[T,U,V,W] =
-    new VulkanControlledData[T,U,V,W](datas.head.registry,datas.flatMap(_.components),
+  def fromSeq[T <: VulkanControlled[U,V],U <: VulkanControll[V],V <: VulkanController,W <: VulkanComponent](registry: Registry,datas: Traversable[VulkanControlledData[T,U,V,W]]): VulkanControlledData[T,U,V,W] =
+    new VulkanControlledData[T,U,V,W](registry,datas.flatMap(_.components),
       datas.flatMap(_.groupedComponents.toSeq).groupBy(_._1).mapValues(_.flatMap(_._2)))
 }

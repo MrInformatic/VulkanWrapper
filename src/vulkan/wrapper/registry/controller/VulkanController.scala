@@ -13,5 +13,5 @@ abstract class VulkanController(registry: Registry, node: Node) extends VulkanNa
   var removeTags: VulkanControllData[VulkanControllRemove[this.type],this.type] =
     VulkanControllRemove[this.type](registry,getThis,node)
   val controllTags: VulkanControllData[VulkanControll[this.type],this.type] =
-    VulkanControllData(requireTags, removeTags)
+    VulkanControllData(registry,requireTags, removeTags)
 }
