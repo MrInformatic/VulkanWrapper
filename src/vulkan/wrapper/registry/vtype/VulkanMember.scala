@@ -1,6 +1,6 @@
 package vulkan.wrapper.registry.vtype
 
-import vulkan.wrapper.registry.venum.VulkanEnumNormalEnum
+import vulkan.wrapper.registry.venum.{VulkanEnumEnum, VulkanEnumNormalEnum}
 import vulkan.wrapper.registry.{Registry, _}
 
 import scala.xml.Node
@@ -15,7 +15,7 @@ class VulkanMember(registry: Registry, val vulkanMemberType: VulkanMemberType, n
   val noautovalidity: Boolean = (node \@@ "noautovalidity").exists(_.toBoolean)
   val typeName: Option[VulkanType] = (node \@\ "type").flatMap(registry.types.byNameOption)
   override val name: String = node @\\ "name"
-  val enum: Option[VulkanEnumNormalEnum] = (node \@\ "enum").flatMap(registry.enums.enumByNameOption)
+  val enum: Option[VulkanEnumEnum] = (node \@\ "enum").flatMap(registry.enums.enumByNameOption)
   val comment: Option[String] = node \@\ "comment"
 
   private def genClen(_len: Traversable[String] = len,_altlen: Traversable[String] = altlen): Traversable[String] =

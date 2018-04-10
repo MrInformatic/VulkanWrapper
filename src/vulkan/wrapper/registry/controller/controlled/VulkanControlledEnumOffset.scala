@@ -13,8 +13,12 @@ class VulkanControlledEnumOffset[+T <: VulkanControll[U],+U <: VulkanController]
   val extnumber: Option[Int] = (node \@@ "extnumber").map(_.toInt)
   val dir: Boolean = (node \@@ "dir").contains("-")
 
-  //TODO: VulkanEnum offset value calculation
-  override val value: String = _
+  val extensionNumber: Int = extnumber.getOrElse(vulkanControll.vulkanController.extNumber)
+
+  override val value: String = if(dir)
+      (1000000000 + (extensionNumber-1)*1000 + offset).toString
+    else
+      (-(1000000000 + (extensionNumber-1)*1000 + offset)).toString
 }
 
 object VulkanControlledEnumOffset {

@@ -8,6 +8,8 @@ import scala.xml.Node
 abstract class VulkanController(registry: Registry, node: Node) extends VulkanNamedComponent(registry,node){
   def getThis: this.type
 
+  val extNumber: Int
+
   var requireTags: VulkanControllData[VulkanControllRequire[this.type],this.type] =
     VulkanControllRequire[this.type](registry,getThis,node)
   var removeTags: VulkanControllData[VulkanControllRemove[this.type],this.type] =

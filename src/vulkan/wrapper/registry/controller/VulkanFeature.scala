@@ -8,11 +8,13 @@ import scala.xml.Node
 class VulkanFeature(registry: Registry, node: Node) extends VulkanController(registry,node){
   override def getThis: this.type = this
 
-  def api: String = node \@ "api"
+  override val extNumber: Int = 0
+
+  val api: String = node \@ "api"
   override val name: String = node \@ "name"
-  def number: String = node \@ "number"
-  def protect: Option[String] = node \@@ "protect"
-  def comment: Option[String] = node \@@ "comment"
+  val number: String = node \@ "number"
+  val protect: Option[String] = node \@@ "protect"
+  val comment: Option[String] = node \@@ "comment"
 }
 
 object VulkanFeature {

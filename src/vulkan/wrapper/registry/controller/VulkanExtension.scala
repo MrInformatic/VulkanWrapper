@@ -9,7 +9,7 @@ class VulkanExtension(registry: Registry, node: Node) extends VulkanController(r
   override def getThis: this.type = this
 
   override val name: String = node \@ "name"
-  val number: String = node \@ "number"
+  override val extNumber: Int = (node \@ "number").toInt
   val author: Option[String] = node \@@ "author"
   val contact: Option[String] = node \@@ "contact"
   val typeName: String = node \@ "type"

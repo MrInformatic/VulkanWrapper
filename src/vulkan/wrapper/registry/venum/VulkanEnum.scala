@@ -2,7 +2,7 @@ package vulkan.wrapper.registry.venum
 
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controll.VulkanControll
-import vulkan.wrapper.registry.controller.controlled.VulkanControlledEnumValue
+import vulkan.wrapper.registry.controller.controlled._
 import vulkan.wrapper.registry.vtype.VulkanEnumType
 import vulkan.wrapper.registry.{Registry, _}
 
@@ -12,10 +12,27 @@ class VulkanEnum(registry: Registry,node: Node) extends VulkanComponent(registry
   val valueEnums: VulkanComponentMappedData[VulkanEnumValue] = VulkanEnumValue(registry,this,node)
   val bitposEnums: VulkanComponentMappedData[VulkanEnumBitpos] = VulkanEnumBitpos(registry,this,node)
   val aliasEnums: VulkanComponentMappedData[VulkanEnumAlias] = VulkanEnumAlias(registry,this,node)
+
   lazy val controlledValueEnums: VulkanComponentMappedData[VulkanControlledEnumValue[VulkanControll[VulkanController],VulkanController]] =
-    registry.controllers.controllTags.enumValues.
-  val enums: VulkanComponentMappedData[VulkanEnumNormalEnum] =
-    VulkanComponentMappedData(registry, valueEnums, bitposEnums, aliasEnums)
+    VulkanComponentMappedData(registry,registry.controllers.controllTags.enumValues.controlledComponents(this))
+
+  lazy val controlledBitposEnums: VulkanComponentMappedData[VulkanControlledEnumBitpos[VulkanControll[VulkanController],VulkanController]] =
+    VulkanComponentMappedData(registry,registry.controllers.controllTags.enumBitposes.controlledComponents(this))
+
+  lazy val controlledAliasEnums: VulkanComponentMappedData[VulkanControlledEnumAlias[VulkanControll[VulkanController],VulkanController]] =
+    VulkanComponentMappedData(registry,registry.controllers.controllTags.enumAlias.controlledComponents(this))
+
+  lazy val controlledOffsetEnums: VulkanComponentMappedData[VulkanControlledEnumOffset[VulkanControll[VulkanController],VulkanController]] =
+    VulkanComponentMappedData(registry,registry.controllers.controllTags.enumOffset.controlledComponents(this))
+
+  lazy val controlledExtendsEnum: VulkanComponentMappedData[VulkanControlledEnumExtends[VulkanControll[VulkanController],VulkanController]] =
+    VulkanComponentMappedData(registry,controlledValueEnums,controlledBitposEnums,controlledAliasEnums)
+
+  lazy val controlledEnum: VulkanComponentMappedData[VulkanControlledEnum[VulkanControll[VulkanController],VulkanController]] =
+    VulkanComponentMappedData(registry,controlledExtendsEnum,controlledOffsetEnums)
+
+  val enums: VulkanComponentMappedData[VulkanEnumEnum] =
+    VulkanComponentMappedData(registry, valueEnums, bitposEnums, aliasEnums, controlledEnum)
 
   val unused: VulkanComponentSequentalData[VulkanEnumUnused] = VulkanEnumUnused(registry,this,node)
   val name: Option[String] = node \@@ "name"

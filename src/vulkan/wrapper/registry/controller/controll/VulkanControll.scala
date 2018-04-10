@@ -4,7 +4,7 @@ import vulkan.wrapper.registry._
 import vulkan.wrapper.registry.command.{VulkanCommand, VulkanCommandNode$}
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controlled._
-import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumNormalEnum}
+import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum, VulkanEnumNormalEnum}
 import vulkan.wrapper.registry.vtype.VulkanType
 
 import scala.xml.Node
@@ -27,7 +27,7 @@ abstract class VulkanControll[+T <: VulkanController](registry: Registry, val vu
   val enumOffset: VulkanControlledData[VulkanControlledEnumOffset[this.type,T],this.type,T,VulkanEnum] =
     VulkanControlledEnumOffset[this.type,T](registry,getThis,node)
 
-  val enumReference: VulkanControlledData[VulkanControlledEnumReference[this.type,T],this.type,T,VulkanEnumNormalEnum] =
+  val enumReference: VulkanControlledData[VulkanControlledEnumReference[this.type,T],this.type,T,VulkanEnumEnum] =
     VulkanControlledEnumReference[this.type,T](registry,getThis,node)
 
   val commands: VulkanControlledData[VulkanControlledCommand[this.type,T],this.type,T,VulkanCommand] =
