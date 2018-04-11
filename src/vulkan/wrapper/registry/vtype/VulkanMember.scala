@@ -13,9 +13,9 @@ class VulkanMember(registry: Registry, val vulkanMemberType: VulkanMemberType, n
   val externsync: Boolean = (node \@@ "externsync").exists(_.toBoolean)
   val optional: Boolean = (node \@@ "optional").exists(_.toBoolean)
   val noautovalidity: Boolean = (node \@@ "noautovalidity").exists(_.toBoolean)
-  val typeName: Option[VulkanType] = (node \@\ "type").flatMap(registry.types.byNameOption)
+  lazy val typeName: Option[VulkanType] = (node \@\ "type").flatMap(registry.types.byNameOption)
   override val name: String = node @\\ "name"
-  val enum: Option[VulkanEnumEnum] = (node \@\ "enum").flatMap(registry.enums.enumByNameOption)
+  lazy val enum: Option[VulkanEnumEnum] = (node \@\ "enum").flatMap(registry.enums.enums.byNameOption)
   val comment: Option[String] = node \@\ "comment"
 
   private def genClen(_len: Traversable[String] = len,_altlen: Traversable[String] = altlen): Traversable[String] =

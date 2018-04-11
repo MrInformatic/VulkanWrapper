@@ -8,7 +8,7 @@ import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum, VulkanEnumNorm
 import scala.xml.Node
 
 class VulkanControlledEnumAlias[+T <: VulkanControll[U],+U <: VulkanController](registry: Registry, vulkanControll: T, node: Node) extends VulkanControlledEnumExtends[T,U](registry,vulkanControll,node) {
-  lazy val alias: VulkanEnumEnum = registry.enums.enumByName(node \@ "alias")
+  lazy val alias: VulkanEnumEnum = registry.enums.enums.byName(node \@ "alias")
   override lazy val value: String = alias.value
 }
 

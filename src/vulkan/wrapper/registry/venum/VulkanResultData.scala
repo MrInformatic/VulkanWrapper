@@ -1,9 +1,9 @@
 package vulkan.wrapper.registry.venum
 
-import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData, VulkanComponentSequentalData}
+import vulkan.wrapper.registry.{Registry, VulkanComponentMappedData, VulkanComponentSequentalData, VulkanNamedComponent}
 
 class VulkanResultData(registry: Registry, val vulkanEnumData: VulkanEnumData)
-  extends VulkanComponentMappedData[VulkanEnumEnum](registry,vulkanEnumData.byName("VkResult").enums.components){
+  extends VulkanComponentMappedData[VulkanNamedComponent with VulkanEnumEnum](registry,vulkanEnumData.byName("VkResult").enums.components){
 
   val successCodes: Map[String,VulkanEnumEnum] = mappedComponents.filter(_._2.value.toInt >= 0)
   val errorCodes: Map[String,VulkanEnumEnum] = mappedComponents.filter(_._2.value.toInt < 0)

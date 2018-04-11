@@ -27,7 +27,7 @@ abstract class VulkanControll[+T <: VulkanController](registry: Registry, val vu
   val enumOffset: VulkanControlledData[VulkanControlledEnumOffset[this.type,T],this.type,T,VulkanEnum] =
     VulkanControlledEnumOffset[this.type,T](registry,getThis,node)
 
-  val enumReference: VulkanControlledData[VulkanControlledEnumReference[this.type,T],this.type,T,VulkanEnumEnum] =
+  val enumReference: VulkanControlledData[VulkanControlledEnumReference[this.type,T],this.type,T,VulkanNamedComponent with VulkanEnumEnum] =
     VulkanControlledEnumReference[this.type,T](registry,getThis,node)
 
   val commands: VulkanControlledData[VulkanControlledCommand[this.type,T],this.type,T,VulkanCommand] =

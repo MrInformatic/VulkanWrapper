@@ -1,7 +1,7 @@
 package vulkan.wrapper.registry.controller.controll
 
 import vulkan.wrapper.registry.command.{VulkanCommand, VulkanCommandNode$}
-import vulkan.wrapper.registry.{Registry, VulkanComponentSequentalData}
+import vulkan.wrapper.registry.{Registry, VulkanComponentSequentalData, VulkanNamedComponent}
 import vulkan.wrapper.registry.controller.VulkanController
 import vulkan.wrapper.registry.controller.controlled._
 import vulkan.wrapper.registry.venum.{VulkanEnum, VulkanEnumEnum, VulkanEnumNormalEnum}
@@ -26,7 +26,7 @@ class VulkanControllData[+T <: VulkanControll[U], +U <: VulkanController](regist
   val enumOffset: VulkanControlledData[VulkanControlledEnumOffset[T,U],T,U,VulkanEnum] =
     VulkanControlledData.fromSeq(registry,components.map(_.enumOffset))
 
-  val enumReference: VulkanControlledData[VulkanControlledEnumReference[T,U],T,U,VulkanEnumEnum] =
+  val enumReference: VulkanControlledData[VulkanControlledEnumReference[T,U],T,U,VulkanNamedComponent with VulkanEnumEnum] =
     VulkanControlledData.fromSeq(registry,components.map(_.enumReference))
 
   val commands: VulkanControlledData[VulkanControlledCommand[T,U],T,U,VulkanCommand] =
